@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 contract ERC20Token is ERC20 {
 
     address public owner;
-    uint256 public constant MAX_SUPPLY = 1000000 * 10 ** decimals();
+    uint256 public immutable MAX_SUPPLY;
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
 
@@ -15,6 +15,7 @@ contract ERC20Token is ERC20 {
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
+        MAX_SUPPLY = 1000000 * 10 ** decimals();
     }
 
     modifier restricted() {
