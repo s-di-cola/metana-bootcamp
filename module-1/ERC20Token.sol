@@ -2,16 +2,20 @@
 pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 contract ERC20Token is ERC20 {
 
     address public owner;
     uint256 public immutable MAX_SUPPLY;
     mapping(address => bool) public isBlacklisted;
+    using Address for address payable;
+
+    event TokensSold(address indexed seller, uint256 amount, uint256 etherAmount);
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
-        MAX_SUPPLY = 1000000 * 10 ** 18;
+        MAX_SUPPLY = 1000000 * 10 ** decimals();
     }
 
     modifier restricted() {
@@ -57,14 +61,32 @@ contract ERC20Token is ERC20 {
     }
 
     function mintTokens() external payable {
-        require(totalSupply() + 1000 * 10 ** 18 <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+        require(totalSupply() + 1000 * 10 ** decimals() <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
         require(msg.value == 1 ether, 'You must send 1 ether to mint 1000 tokens');
-        _mint(msg.sender, 1000 * 10 ** 18);
+        _mint(msg.sender, 1000 * 10 ** decimals());
     }
 
-    function withdraw() external {
-        payable(msg.sender).transfer(address(this).balance);
+    function withdraw() external restricted {
+        payable(owner).sendValue(address(this).balance);
+        emit Transfer(address(this), owner, address(this).balance);
     }
 
 
+    function sellBack(uint256 _amount) external notBlacklisted(msg.sender) {
+        require(balanceOf(msg.sender) >= _amount, 'You do not have enough tokens to sell');
+
+        // 1. (_amount * 5 * 10**17) calculates the total wei as if each token was worth 0.5 ether
+        // 2. Dividing by (10**21) adjusts for both:
+        //    a) The fact that we want 0.5 (5 * 10**-1) ether per 1000 tokens (so divide by 1000)
+        //    b) The 18 decimal places of ERC20 tokens (so divide by 10**18)
+        //    Combined, this is a division by 10**3 * 10**18 = 10**21
+        uint256 etherAmount = (_amount * 5 * 10**17) / (10**21);
+        require(address(this).balance >= etherAmount, 'The contract does not have enough ether to pay you');
+
+        bool isTransferSuccessful = transferFrom(msg.sender, address(this), _amount);
+        require(isTransferSuccessful, 'Transfer to contract failed');
+
+        payable(msg.sender).sendValue(etherAmount);
+        emit TokensSold(msg.sender, _amount, etherAmount);
+    }
 }
