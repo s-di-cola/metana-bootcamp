@@ -7,7 +7,6 @@ contract ERC20Token is ERC20 {
 
     address public owner;
     uint256 public immutable MAX_SUPPLY;
-    uint256 public currentSupply;
     mapping(address => bool) public isBlacklisted;
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
@@ -27,19 +26,16 @@ contract ERC20Token is ERC20 {
     function mintTokensToAddress(address _recipient, uint256 _amount) external restricted {
         require(totalSupply() + _amount <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
         _mint(_recipient, _amount);
-        currentSupply += _amount;
     }
 
     function changeBalanceAtAddress(address _target, uint256 _newBalance) external restricted {
         uint256 currentBalance = balanceOf(_target);
         if (currentBalance > _newBalance) {
             _burn(_target, currentBalance - _newBalance);
-            currentSupply -= currentBalance - _newBalance;
         }
         else {
-            require(currentSupply + (_newBalance - currentBalance) <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+            require(totalSupply() + (_newBalance - currentBalance) <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
             _mint(_target, _newBalance - currentBalance);
-            currentSupply += _newBalance - currentBalance;
         }
     }
 
@@ -60,6 +56,15 @@ contract ERC20Token is ERC20 {
         super._update(_from, _to, _value);
     }
 
+    function mintTokens() external payable {
+        require(totalSupply() + 1000 * 10 ** 18 <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+        require(msg.value == 1 ether, 'You must send 1 ether to mint 1000 tokens');
+        _mint(msg.sender, 1000 * 10 ** 18);
+    }
+
+    function withdraw() external {
+        payable(msg.sender).transfer(address(this).balance);
+    }
 
 
 }
