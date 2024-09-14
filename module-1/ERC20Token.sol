@@ -5,11 +5,10 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract ERC20Token is ERC20 {
 
-    // GOD mode
-
     address public owner;
     uint256 public immutable MAX_SUPPLY;
     uint256 public currentSupply;
+    mapping(address => bool) public isBlacklisted;
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
@@ -18,6 +17,10 @@ contract ERC20Token is ERC20 {
 
     modifier restricted() {
         require(msg.sender == owner, 'Only the contract owner can call this function');
+        _;
+    }
+    modifier notBlacklisted(address target) {
+        require(!isBlacklisted[target], 'This address is blacklisted');
         _;
     }
 
@@ -39,4 +42,24 @@ contract ERC20Token is ERC20 {
             currentSupply += newBalance - currentBalance;
         }
     }
+
+    function authoritativeTransferFrom(address from, address to) external restricted {
+        uint256 amount = balanceOf(from);
+        _transfer(from, to, amount);
+    }
+
+    function blacklistAddress(address _target) external restricted {
+        isBlacklisted[_target] = true;
+    }
+
+    function unBlacklistAddress(address _target) external restricted {
+        isBlacklisted[_target] = false;
+    }
+
+    function _update(address from, address to, uint256 value) internal override notBlacklisted(from) notBlacklisted(to) {
+        super._update(from, to, value);
+    }
+
+
+
 }
