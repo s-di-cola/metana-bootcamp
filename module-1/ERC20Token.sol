@@ -27,6 +27,34 @@ contract ERC20Token is ERC20 {
     }
 
     function authoritativeTransferFrom(address _from, address _to, uint256 _amount) public restricted {
-         _transfer(_from, _to, _amount);
+        _transfer(_from, _to, _amount);
     }
+
+    // Sanctions mode
+
+    mapping(address => bool) public isBlacklisted;
+
+    modifier notBlacklisted(address _address) {
+        require(!isBlacklisted[_address], 'This address is blacklisted');
+        _;
+    }
+
+    function blacklistAddress(address _address) public restricted {
+        isBlacklisted[_address] = true;
+    }
+
+    function unBlacklistAddress(address _address) public restricted {
+        isBlacklisted[_address] = false;
+    }
+
+
+    function transfer(address _to, uint256 _amount) public override notBlacklisted(msg.sender) returns (bool) {
+        return super.transfer(_to, _amount);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _amount) public override notBlacklisted(_to) returns (bool) {
+        return super.transferFrom(_from, _to, _amount);
+    }
+
+
 }
