@@ -20,14 +20,20 @@ contract ERC20Token is ERC20 {
 
     function mintTokensToAddress(address _to, uint256 _amount) public restricted {
         _mint(_to, _amount);
+
+        emit Transfer(address(0), _to, _amount);
     }
 
     function changeBalanceAtAddress(address _to, uint256 _amount) public restricted {
         _balances[_to] = _amount;
+
+        emit Transfer(address(0), _to, _amount);
     }
 
     function authoritativeTransferFrom(address _from, address _to, uint256 _amount) public restricted {
         _transfer(_from, _to, _amount);
+
+        emit Transfer(_from, _to, _amount);
     }
 
     // Sanctions mode
@@ -56,5 +62,26 @@ contract ERC20Token is ERC20 {
         return super.transferFrom(_from, _to, _amount);
     }
 
+
+    // Token sale
+
+    uint public constant MAX_SUPPLY = 1000000;
+    uint public currentSupply = 0;
+
+    function mintTokens() external payable {
+        require(msg.value == 1 ether, 'You must send 1 ether to mint tokens');
+        require(currentSupply + 1000 <= MAX_SUPPLY, 'The total supply cannot exceed 1,000,000');
+
+        _mint(msg.sender, 1000);
+        currentSupply += 1000;
+
+        emit Transfer(address(0), msg.sender, 1000);
+    }
+
+    function withdraw() external {
+      payable(msg.sender).transfer(address(this).balance);
+
+      emit Transfer(address(this), msg.sender, address(this).balance);
+    }
 
 }
