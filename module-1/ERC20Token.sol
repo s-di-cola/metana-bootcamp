@@ -19,45 +19,45 @@ contract ERC20Token is ERC20 {
         require(msg.sender == owner, 'Only the contract owner can call this function');
         _;
     }
-    modifier notBlacklisted(address target) {
-        require(!isBlacklisted[target], 'This address is blacklisted');
+    modifier notBlacklisted(address _target) {
+        require(!isBlacklisted[_target], 'This address is blacklisted');
         _;
     }
 
-    function mintTokensToAddress(address recipient, uint256 amount) external restricted {
-        require(totalSupply() + amount <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
-        _mint(recipient, amount);
-        currentSupply += amount;
+    function mintTokensToAddress(address _recipient, uint256 _amount) external restricted {
+        require(totalSupply() + _amount <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+        _mint(_recipient, _amount);
+        currentSupply += _amount;
     }
 
-    function changeBalanceAtAddress(address target, uint256 newBalance) external restricted {
-        uint256 currentBalance = balanceOf(target);
-        if (currentBalance > newBalance) {
-            _burn(target, currentBalance - newBalance);
-            currentSupply -= currentBalance - newBalance;
+    function changeBalanceAtAddress(address _target, uint256 _newBalance) external restricted {
+        uint256 currentBalance = balanceOf(_target);
+        if (currentBalance > _newBalance) {
+            _burn(_target, currentBalance - _newBalance);
+            currentSupply -= currentBalance - _newBalance;
         }
         else {
-            require(currentSupply + (newBalance - currentBalance) <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
-            _mint(target, newBalance - currentBalance);
-            currentSupply += newBalance - currentBalance;
+            require(currentSupply + (_newBalance - currentBalance) <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+            _mint(_target, _newBalance - currentBalance);
+            currentSupply += _newBalance - currentBalance;
         }
     }
 
-    function authoritativeTransferFrom(address from, address to) external restricted {
-        uint256 amount = balanceOf(from);
-        _transfer(from, to, amount);
+    function authoritativeTransferFrom(address _from, address _to) external restricted {
+        uint256 amount = balanceOf(_from);
+        _transfer(_from, _to, amount);
     }
 
-    function blacklistAddress(address _target) external restricted {
-        isBlacklisted[_target] = true;
+    function blacklistAddress(address _address) external restricted {
+        isBlacklisted[_address] = true;
     }
 
-    function unBlacklistAddress(address _target) external restricted {
-        isBlacklisted[_target] = false;
+    function unBlacklistAddress(address _address) external restricted {
+        isBlacklisted[_address] = false;
     }
 
-    function _update(address from, address to, uint256 value) internal override notBlacklisted(from) notBlacklisted(to) {
-        super._update(from, to, value);
+    function _update(address _from, address _to, uint256 _value) internal override notBlacklisted(_from) notBlacklisted(_to) {
+        super._update(_from, _to, _value);
     }
 
 
