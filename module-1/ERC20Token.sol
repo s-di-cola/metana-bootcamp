@@ -27,7 +27,6 @@ contract ERC20Token is ERC20 {
     }
 
     function mintTokensToAddress(address _recipient, uint256 _amount) external restricted {
-        require(totalSupply() + _amount <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
         _mint(_recipient, _amount);
     }
 
@@ -37,7 +36,6 @@ contract ERC20Token is ERC20 {
             _burn(_target, currentBalance - _newBalance);
         }
         else {
-            require(totalSupply() + (_newBalance - currentBalance) <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
             _mint(_target, _newBalance - currentBalance);
         }
     }
@@ -78,7 +76,7 @@ contract ERC20Token is ERC20 {
 
         // 1. (_amount * 5 * 10**17) calculates the total wei as if each token was worth 0.5 ether
         // 2. Dividing by (10**21) adjusts for both:
-        //    a) The fact that we want 0.5 (5 * 10**-1) ether per 1000 tokens (so divide by 1000)
+        //    a) The fact that we want 0.5 (5 * 10**-1) ether per 1000 tokens
         //    b) The 18 decimal places of ERC20 tokens (so divide by 10**18)
         //    Combined, this is a division by 10**3 * 10**18 = 10**21
         uint256 etherAmount = (_amount * 5 * 10**17) / (10**21);
