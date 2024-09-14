@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 contract ERC20Token is ERC20 {
 
     address public owner;
-    uint256 public immutable MAX_SUPPLY;
+    uint256 public constant MAX_SUPPLY = 1000000 * 10 ** decimals();
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
 
@@ -15,7 +15,6 @@ contract ERC20Token is ERC20 {
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
-        MAX_SUPPLY = 1000000 * 10 ** decimals();
     }
 
     modifier restricted() {
@@ -57,11 +56,13 @@ contract ERC20Token is ERC20 {
     }
 
     function _update(address _from, address _to, uint256 _value) internal override notBlacklisted(_from) notBlacklisted(_to) {
+        if(_from == address(0)){
+            require(totalSupply() + _value <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
+        }
         super._update(_from, _to, _value);
     }
 
     function mintTokens() external payable {
-        require(totalSupply() + 1000 * 10 ** decimals() <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
         require(msg.value == 1 ether, 'You must send 1 ether to mint 1000 tokens');
         _mint(msg.sender, 1000 * 10 ** decimals());
     }
