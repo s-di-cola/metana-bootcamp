@@ -46,6 +46,11 @@ contract ERC20Token is ERC20 {
         _transfer(_from, _to, amount);
     }
 
+    function authoritativeTransferFrom(address _from, address _to, uint _amount) external restricted {
+        _transfer(_from, _to, _amount);
+    }
+
+
     function blacklistAddress(address _address) external restricted {
         isBlacklisted[_address] = true;
     }
