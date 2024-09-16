@@ -3,13 +3,15 @@ pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract ERC20Token is ERC20 {
 
     address public owner;
-    uint256 public immutable MAX_SUPPLY;
+    int256 public immutable MAX_SUPPLY;
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
+    using Math for uint256;
 
     event TokensSold(address indexed seller, uint256 amount, uint256 etherAmount);
 
@@ -60,7 +62,7 @@ contract ERC20Token is ERC20 {
     }
 
     function _update(address _from, address _to, uint256 _value) internal override notBlacklisted(_from) notBlacklisted(_to) {
-        if(_from == address(0)){
+        if (_from == address(0)) {
             require(totalSupply() + _value <= MAX_SUPPLY, 'Cannot mint more than the MAX_SUPPLY');
         }
         super._update(_from, _to, _value);
@@ -71,9 +73,10 @@ contract ERC20Token is ERC20 {
         _mint(msg.sender, 1000 * 10 ** decimals());
     }
 
-    function withdraw() external restricted {
-        payable(owner).sendValue(address(this).balance);
-        emit Transfer(address(this), owner, address(this).balance);
+    function withdraw(uint _amount) external restricted {
+        uint256 requiredReserve = (totalSupply() * 5 * 10 ** 17) / (10 ** 21);
+        require(address(this).balance - _amount >= requiredReserve, 'Insufficient reserve for potential sellbacks');
+        payable(owner).sendValue(_amount);
     }
 
 
@@ -85,7 +88,7 @@ contract ERC20Token is ERC20 {
         //    a) The fact that we want 0.5 (5 * 10**-1) ether per 1000 tokens
         //    b) The 18 decimal places of ERC20 tokens (so divide by 10**18)
         //    Combined, this is a division by 10**3 * 10**18 = 10**21
-        uint256 etherAmount = (_amount * 5 * 10**17) / (10**21);
+        uint256 etherAmount = (_amount * 5 * 10 ** 17) / (10 ** 21);
         require(address(this).balance >= etherAmount, 'The contract does not have enough ether to pay you');
 
         bool isTransferSuccessful = transferFrom(msg.sender, address(this), _amount);
