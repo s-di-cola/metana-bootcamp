@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract ERC20Token is ERC20 {
 
@@ -11,13 +10,12 @@ contract ERC20Token is ERC20 {
     int256 public immutable MAX_SUPPLY;
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
-    using Math for uint256;
 
     event TokensSold(address indexed seller, uint256 amount, uint256 etherAmount);
 
     constructor(string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         owner = msg.sender;
-        MAX_SUPPLY = 1000000 * 10 ** decimals();
+        MAX_SUPPLY = 1_000_000 * 10 ** decimals();
     }
 
     modifier restricted() {
