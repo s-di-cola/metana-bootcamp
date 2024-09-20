@@ -1,23 +1,27 @@
 {
-  "name": "Gentle Ginger Cat",
-  "description": "A close-up portrait of a gentle ginger cat with a calm expression, relaxing comfortably.",
-  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/6.png",
+  "name": "Majestic Gray Feline",
+  "description": "A stunning close-up of a gray cat with piercing green eyes, showcasing the beauty of domestic felines.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/6.png",
   "attributes": [
     {
-      "trait_type": "Animal",
+      "trait_type": "Species",
       "value": "Cat"
     },
     {
       "trait_type": "Color",
-      "value": "Ginger"
-    },
-    {
-      "trait_type": "Expression",
-      "value": "Calm"
+      "value": "Gray"
     },
     {
       "trait_type": "Eye Color",
       "value": "Green"
+    },
+    {
+      "trait_type": "Fur Length",
+      "value": "Medium"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Blurred Nature"
     }
   ]
 }

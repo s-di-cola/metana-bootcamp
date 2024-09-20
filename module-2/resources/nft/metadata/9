@@ -1,27 +1,31 @@
 {
-  "name": "Calico Whisker Wonder",
-  "description": "A charming close-up of a calico cat with striking green eyes and a mix of orange, white, and black fur, embodying feline diversity.",
-  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/9.png",
+  "name": "Joyful Canine Spirit",
+  "description": "An exuberant portrait of a white dog with perked ears and a happy expression, showcasing the infectious enthusiasm of man's best friend.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/9.png",
   "attributes": [
     {
       "trait_type": "Species",
-      "value": "Cat"
+      "value": "Dog"
     },
     {
       "trait_type": "Color",
-      "value": "Calico"
+      "value": "White"
     },
     {
-      "trait_type": "Eye Color",
-      "value": "Green"
+      "trait_type": "Ear Type",
+      "value": "Erect"
     },
     {
-      "trait_type": "Fur Pattern",
-      "value": "Tri-color"
+      "trait_type": "Expression",
+      "value": "Happy"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "Collar with Tag"
     },
     {
       "trait_type": "Background",
-      "value": "Warm Indoor"
+      "value": "Studio Gray"
     }
   ]
 }

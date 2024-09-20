@@ -1,23 +1,23 @@
 {
-  "name": "Cosmic Whale Breach",
-  "description": "A majestic whale breaching from the depths of the ocean into a surreal, cloudy sky.",
-  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/1.png",
+  "name": "Curious White Dog",
+  "description": "A close-up portrait of a white dog with attentive eyes and a red collar.",
+   "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/1.png",
   "attributes": [
     {
       "trait_type": "Animal",
-      "value": "Whale"
+      "value": "Dog"
     },
     {
-      "trait_type": "Action",
-      "value": "Breaching"
+      "trait_type": "Color",
+      "value": "White"
     },
     {
-      "trait_type": "Environment",
-      "value": "Ocean"
+      "trait_type": "Accessory",
+      "value": "Red Collar"
     },
     {
-      "trait_type": "Sky",
-      "value": "Cloudy"
+      "trait_type": "Expression",
+      "value": "Curious"
     }
   ]
 }

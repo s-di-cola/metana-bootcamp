@@ -1,23 +1,23 @@
 {
-  "name": "Alert Tabby Cat",
-  "description": "A portrait of an alert tabby cat with striking green eyes, gazing directly at the camera.",
-  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/4.png",
+  "name": "Happy Dog with Red Collar",
+  "description": "A joyful dog with a red collar, exuding happiness and enthusiasm.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/4.png",
   "attributes": [
     {
       "trait_type": "Animal",
-      "value": "Cat"
-    },
-    {
-      "trait_type": "Color",
-      "value": "Tabby"
+      "value": "Dog"
     },
     {
       "trait_type": "Expression",
-      "value": "Alert"
+      "value": "Happy"
     },
     {
-      "trait_type": "Eye Color",
-      "value": "Green"
+      "trait_type": "Color",
+      "value": "Brown and White"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "Red Collar"
     }
   ]
 }

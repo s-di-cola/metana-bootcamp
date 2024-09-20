@@ -1,23 +1,23 @@
 {
-  "name": "Underwater Whale Glide",
-  "description": "A serene whale gliding just below the surface of a clear ocean, with sunlight illuminating the water.",
-   "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/3.png",
+  "name": "Alert Tabby Cat",
+  "description": "A portrait of an alert tabby cat with striking green eyes, gazing directly at the camera.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/3.png",
   "attributes": [
     {
       "trait_type": "Animal",
-      "value": "Whale"
+      "value": "Cat"
     },
     {
-      "trait_type": "Position",
-      "value": "Underwater"
+      "trait_type": "Color",
+      "value": "Tabby"
     },
     {
-      "trait_type": "Lighting",
-      "value": "Sunlit"
+      "trait_type": "Expression",
+      "value": "Alert"
     },
     {
-      "trait_type": "Environment",
-      "value": "Ocean"
+      "trait_type": "Eye Color",
+      "value": "Green"
     }
   ]
 }

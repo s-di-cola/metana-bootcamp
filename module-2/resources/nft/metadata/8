@@ -1,7 +1,7 @@
 {
-  "name": "Ginger Tabby Charm",
-  "description": "An endearing portrait of an orange tabby cat with bright, expressive eyes, capturing the warmth of feline companionship.",
-  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/8.png",
+  "name": "Calico Whisker Wonder",
+  "description": "A charming close-up of a calico cat with striking green eyes and a mix of orange, white, and black fur, embodying feline diversity.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/8.png",
   "attributes": [
     {
       "trait_type": "Species",
@@ -9,19 +9,19 @@
     },
     {
       "trait_type": "Color",
-      "value": "Orange Tabby"
+      "value": "Calico"
     },
     {
       "trait_type": "Eye Color",
-      "value": "Green-Blue"
+      "value": "Green"
     },
     {
       "trait_type": "Fur Pattern",
-      "value": "Striped"
+      "value": "Tri-color"
     },
     {
       "trait_type": "Background",
-      "value": "Dark Indoors"
+      "value": "Warm Indoor"
     }
   ]
 }
