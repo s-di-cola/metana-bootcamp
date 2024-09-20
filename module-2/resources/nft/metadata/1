@@ -1,0 +1,23 @@
+{
+  "name": "Cosmic Whale Breach",
+  "description": "A majestic whale breaching from the depths of the ocean into a surreal, cloudy sky.",
+  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/1.png",
+  "attributes": [
+    {
+      "trait_type": "Animal",
+      "value": "Whale"
+    },
+    {
+      "trait_type": "Action",
+      "value": "Breaching"
+    },
+    {
+      "trait_type": "Environment",
+      "value": "Ocean"
+    },
+    {
+      "trait_type": "Sky",
+      "value": "Cloudy"
+    }
+  ]
+}

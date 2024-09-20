@@ -1,0 +1,27 @@
+{
+  "name": "Majestic Gray Feline",
+  "description": "A stunning close-up of a gray cat with piercing green eyes, showcasing the beauty of domestic felines.",
+  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/7.png",
+  "attributes": [
+    {
+      "trait_type": "Species",
+      "value": "Cat"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Gray"
+    },
+    {
+      "trait_type": "Eye Color",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Fur Length",
+      "value": "Medium"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Blurred Nature"
+    }
+  ]
+}

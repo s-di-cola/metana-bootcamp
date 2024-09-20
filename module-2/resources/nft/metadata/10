@@ -1,0 +1,31 @@
+{
+  "name": "Joyful Canine Spirit",
+  "description": "An exuberant portrait of a white dog with perked ears and a happy expression, showcasing the infectious enthusiasm of man's best friend.",
+  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/10.png",
+  "attributes": [
+    {
+      "trait_type": "Species",
+      "value": "Dog"
+    },
+    {
+      "trait_type": "Color",
+      "value": "White"
+    },
+    {
+      "trait_type": "Ear Type",
+      "value": "Erect"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "Happy"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "Collar with Tag"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Studio Gray"
+    }
+  ]
+}

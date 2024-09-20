@@ -1,0 +1,27 @@
+{
+  "name": "Ginger Tabby Charm",
+  "description": "An endearing portrait of an orange tabby cat with bright, expressive eyes, capturing the warmth of feline companionship.",
+  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/8.png",
+  "attributes": [
+    {
+      "trait_type": "Species",
+      "value": "Cat"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Orange Tabby"
+    },
+    {
+      "trait_type": "Eye Color",
+      "value": "Green-Blue"
+    },
+    {
+      "trait_type": "Fur Pattern",
+      "value": "Striped"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Dark Indoors"
+    }
+  ]
+}

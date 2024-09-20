@@ -1,0 +1,27 @@
+{
+  "name": "Calico Whisker Wonder",
+  "description": "A charming close-up of a calico cat with striking green eyes and a mix of orange, white, and black fur, embodying feline diversity.",
+  "image": "ipfs://QmaANqdcx3vKksgWibmyCFWfV8cwbrnhf6njHR3PNVV9q2/9.png",
+  "attributes": [
+    {
+      "trait_type": "Species",
+      "value": "Cat"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Calico"
+    },
+    {
+      "trait_type": "Eye Color",
+      "value": "Green"
+    },
+    {
+      "trait_type": "Fur Pattern",
+      "value": "Tri-color"
+    },
+    {
+      "trait_type": "Background",
+      "value": "Warm Indoor"
+    }
+  ]
+}
