@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/interfaces/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./ERC721Token.sol";
+import "./ERC20Token.sol";
 
 
 contract Staker is IERC721Receiver {
@@ -36,7 +37,7 @@ contract Staker is IERC721Receiver {
     ) {
         erc20Token = _erc20Token;
         erc721Token = _erc721Token;
-        rewardCycle = _rewardCycle = 1 days;
+        rewardCycle = _rewardCycle == 0 ? 1 days : _rewardCycle;
     }
 
     function stakeNFT(uint256 _tokenId) external {
