@@ -18,16 +18,12 @@ contract ERC20Token is ERC20, Ownable {
         staker = _staker;
     }
 
-    modifier onlyStaker() {
-        require(msg.sender == staker, "Only the staker can call this function");
-        _;
-    }
-
-    function mint(address _to, uint256 _amount) external onlyStaker  {
+    function mint(address _to, uint256 _amount) external {
+        require(msg.sender == staker, "Only the staker can mint tokens");
         _mint(_to, _amount);
     }
 
-    function mint(address _to, uint256 _amount) external payable {
+    function publicMint(address _to, uint256 _amount) external payable {
         uint256 ethAmount = _amount * EXCHANGE_RATE;
         require(msg.value >= ethAmount, "Insufficient ether sent");
 
@@ -53,5 +49,4 @@ contract ERC20Token is ERC20, Ownable {
 
         payable(owner()).transfer(excessEth);
     }
-
 }
