@@ -15,7 +15,7 @@ contract Staker is IERC721Receiver {
     ERC20Token private immutable erc20Token;
     ERC721Token private immutable erc721Token;
 
-    uint256 private immutable rewardCycle;
+    uint256 public constant  REWARD_CYCLE = 1 days;
 
     struct StakedNFT {
         uint256 stakingTimestamp;
@@ -30,14 +30,9 @@ contract Staker is IERC721Receiver {
     event RewardClaimed(address indexed staker, uint256 amount);
     event NTFStakedTransferred(address indexed staker, uint256 tokenId);
 
-    constructor(
-        ERC20Token _erc20Token,
-        ERC721Token _erc721Token,
-        uint256 _rewardCycle
-    ) {
+    constructor(ERC20Token _erc20Token, ERC721Token _erc721Token) {
         erc20Token = _erc20Token;
         erc721Token = _erc721Token;
-        rewardCycle = _rewardCycle == 0 ? 1 days : _rewardCycle;
     }
 
     function stakeNFT(uint256 _tokenId) external {
