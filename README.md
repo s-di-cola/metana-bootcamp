@@ -22,7 +22,7 @@ The deliverable for this module are listed below:
 
  - **1_metana_opensea.sol**: a smart contract that mints an ERC721 token and lists it on OpenSea. 
 It is deployed to the Sepolia testnet at this [address](https://sepolia.etherscan.io/address/0x18250e558872c6c15ce9855f3133f98566b80165).
-The collection can be seen on OpenSea [here](https://testnets.opensea.io/collection/metana-bootcamp-1).
+The collection can be seen on OpenSea [here](https://testnets.opensea.io/collection/metanaopensea-1).
 
  - **2_payable_nft**: a smart contract that can be minted with an ERC20 token (reuses the ERC20 token from module 1).
  - **3_staking_nft**: a smart contract that stakes an ERC721 token and mints 10 ERC20 token as a reward every 24 hours per staked NFT.
