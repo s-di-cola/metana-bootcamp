@@ -29,3 +29,8 @@ yarn-error.log*
 # IDE specific files
 .idea/
 .vscode/
+
+
+# Remix IDE files
+*.code-workspace
+**/artifacts/**

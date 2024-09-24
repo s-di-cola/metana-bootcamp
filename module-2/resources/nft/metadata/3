@@ -1,0 +1,23 @@
+{
+  "name": "Alert Tabby Cat",
+  "description": "A portrait of an alert tabby cat with striking green eyes, gazing directly at the camera.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/3.png",
+  "attributes": [
+    {
+      "trait_type": "Animal",
+      "value": "Cat"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Tabby"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "Alert"
+    },
+    {
+      "trait_type": "Eye Color",
+      "value": "Green"
+    }
+  ]
+}

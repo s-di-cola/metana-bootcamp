@@ -1,0 +1,23 @@
+{
+  "name": "Underwater Whale Glide",
+  "description": "A serene whale gliding just below the surface of a clear ocean, with sunlight illuminating the water.",
+   "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/2.png",
+  "attributes": [
+    {
+      "trait_type": "Animal",
+      "value": "Whale"
+    },
+    {
+      "trait_type": "Position",
+      "value": "Underwater"
+    },
+    {
+      "trait_type": "Lighting",
+      "value": "Sunlit"
+    },
+    {
+      "trait_type": "Environment",
+      "value": "Ocean"
+    }
+  ]
+}

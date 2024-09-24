@@ -1,0 +1,23 @@
+{
+  "name": "Happy Dog with Red Collar",
+  "description": "A joyful dog with a red collar, exuding happiness and enthusiasm.",
+  "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/4.png",
+  "attributes": [
+    {
+      "trait_type": "Animal",
+      "value": "Dog"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "Happy"
+    },
+    {
+      "trait_type": "Color",
+      "value": "Brown and White"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "Red Collar"
+    }
+  ]
+}

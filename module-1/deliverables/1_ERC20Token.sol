@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 contract ERC20Token is ERC20 {
 
     address public owner;
-    int256 public immutable MAX_SUPPLY;
+    uint256 public immutable MAX_SUPPLY;
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
 

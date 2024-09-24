@@ -1,0 +1,23 @@
+{
+  "name": "Curious White Dog",
+  "description": "A close-up portrait of a white dog with attentive eyes and a red collar.",
+   "image": "ipfs://QmW8spJyhC7jQtwpZAP9T92JjtEQK8ioLeJKGTioGPrKV3/1.png",
+  "attributes": [
+    {
+      "trait_type": "Animal",
+      "value": "Dog"
+    },
+    {
+      "trait_type": "Color",
+      "value": "White"
+    },
+    {
+      "trait_type": "Accessory",
+      "value": "Red Collar"
+    },
+    {
+      "trait_type": "Expression",
+      "value": "Curious"
+    }
+  ]
+}
