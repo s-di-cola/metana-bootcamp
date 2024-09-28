@@ -1,7 +1,7 @@
 {
   "name": "Iron Filings Pattern",
   "description": "An artistic rendering of iron filings forming patterns around a magnet.",
-  "image": "ipfs://QmaPpMHQbviAmQv1ViTzroCk9wZTnvieHFD8pmGCPtFqUy",
+   "image": "ipfs://QmcQGx7yUkBm7kUxoJNK5t3RCsHjF4fiF8JvHMKwGJbTg5/2.webp",
   "attributes": [
     {
       "trait_type": "Material",

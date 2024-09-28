@@ -1,8 +1,8 @@
 {
   "name": "Ancient Iron Sword",
   "description": "An ancient iron sword partially buried in desert sand.",
-  "image": "ipfs://QmXtqU6jD7kqf1nWxqAeUTEhMH4o5P3kVW8TriMc8XcpMN",
-  "attributes": [
+  "image": "ipfs://QmcQGx7yUkBm7kUxoJNK5t3RCsHjF4fiF8JvHMKwGJbTg5/3.webp",
+    "attributes": [
     {
       "trait_type": "Material",
       "value": "Iron"
