@@ -1,0 +1,19 @@
+{
+  "name": "Platinum Car",
+  "description": "A futuristic platinum-colored car speeding through a neon-lit city.",
+  "image": "ipfs://file-8r2PEbLBnMkOsqFN45SKi5qN",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Platinum"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Car"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Neon-lit City"
+    }
+  ]
+}

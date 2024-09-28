@@ -1,0 +1,19 @@
+{
+  "name": "Rusty Iron Chain",
+  "description": "A close-up of a rusty iron chain against an industrial background.",
+  "image": "ipfs://QmSomtX7kSkL2GPrV9KNhChZf6LTfsW9DdUbZhLTGbtDSg",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Iron"
+    },
+    {
+      "trait_type": "Condition",
+      "value": "Rusty"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Industrial"
+    }
+  ]
+}

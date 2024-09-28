@@ -1,0 +1,19 @@
+{
+  "name": "Rhodium Crystals",
+  "description": "Close-up of rhodium crystals under a microscope, showing reflective surfaces.",
+  "image": "ipfs://QmNcCwVqd3SPZxsLpboqnVxUcy4uiW1Aiad5A7yjTKLxnG",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Rhodium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Crystals"
+    },
+    {
+      "trait_type": "View",
+      "value": "Microscopic"
+    }
+  ]
+}

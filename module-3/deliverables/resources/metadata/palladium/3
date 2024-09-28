@@ -1,0 +1,19 @@
+{
+  "name": "Palladium Coins",
+  "description": "Close-up of palladium coins minted with unique symbols.",
+  "image": "ipfs://QmVc1EexFMuoJT6ESHYr71GYJCm2ivSYWQkVfY8UEPPkRZ",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Palladium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Coins"
+    },
+    {
+      "trait_type": "Design",
+      "value": "Minted Symbols"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Gold Coins and Treasure Chest",
+  "description": "A pile of gold coins spilling out of an ancient treasure chest.",
+  "image": "ipfs://QmYMuScrgY1tJZZkN2eLJFKMXfJqKbC7njL66UrNqbWiNP",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Coins"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Treasure Chest"
+    }
+  ]
+}

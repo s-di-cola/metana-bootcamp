@@ -1,0 +1,19 @@
+{
+  "name": "Palladium-Catalyzed Reaction",
+  "description": "Palladium-catalyzed chemical reaction depicted in a laboratory setting.",
+  "image": "ipfs://QmadaZm8hPFVw9sBP3otbkoUjfaosnC2ZSbUAfmXEXMVX5",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Palladium"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Laboratory"
+    },
+    {
+      "trait_type": "Process",
+      "value": "Chemical Reaction"
+    }
+  ]
+}

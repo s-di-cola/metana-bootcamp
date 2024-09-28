@@ -1,0 +1,19 @@
+{
+  "name": "Iron Bridge at Dawn",
+  "description": "A modern iron bridge spanning across a misty river at dawn.",
+  "image": "ipfs://QmWpQ3mFF8UwBhGVXsu6fFdUEcupLmcHw9qwzXqx9ekT7b",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Iron"
+    },
+    {
+      "trait_type": "Time of Day",
+      "value": "Dawn"
+    },
+    {
+      "trait_type": "Location",
+      "value": "Misty River"
+    }
+  ]
+}

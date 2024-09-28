@@ -1,0 +1,19 @@
+{
+  "name": "Rhodium-Coated Panels",
+  "description": "Rhodium-coated reflective panels on a futuristic building.",
+  "image": "ipfs://Qmbmw7SqQZNZMWkVMHfGjR4TPuNWz3JGe9DWfJruB1yGsn",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Rhodium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Panels"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Futuristic Building"
+    }
+  ]
+}

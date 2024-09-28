@@ -1,0 +1,19 @@
+{
+  "name": "Silver Jewelry",
+  "description": "Silver jewelry displayed elegantly on black velvet.",
+  "image": "ipfs://QmfA27ZyyqoiqMrWf8DcBLsh9qoDQN2Wgf2REPcd9wJwYK",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Black Velvet"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Elegant"
+    }
+  ]
+}

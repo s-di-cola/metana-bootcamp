@@ -1,0 +1,19 @@
+{
+  "name": "Rhodium Atomic Structure",
+  "description": "An abstract depiction of rhodium's atomic structure with glowing connections.",
+  "image": "ipfs://QmV4m4zKyEAiLPi3tG6GXaTfsYjjUXrChHEvVRqMk6NXn2",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Rhodium"
+    },
+    {
+      "trait_type": "View",
+      "value": "Atomic Structure"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Abstract"
+    }
+  ]
+}

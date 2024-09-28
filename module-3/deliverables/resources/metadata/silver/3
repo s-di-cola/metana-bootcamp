@@ -1,0 +1,19 @@
+{
+  "name": "Silverware",
+  "description": "A close-up of silverware arranged neatly on a dining table.",
+  "image": "ipfs://QmWtFra7V3V8zQ9HxCSG1fi5cGcgDkj9ytL9iw9Am43x3v",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Silverware"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Dining Table"
+    }
+  ]
+}

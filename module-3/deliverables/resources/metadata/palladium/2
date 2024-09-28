@@ -1,0 +1,19 @@
+{
+  "name": "Palladium Key",
+  "description": "An old-fashioned key made of palladium, lying on ancient parchment.",
+  "image": "ipfs://QmUsXsQAsHEXYbh6rVqF39EadoiGCLNjC4eLGpMHmuUUd7",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Palladium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Key"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Ancient Parchment"
+    }
+  ]
+}

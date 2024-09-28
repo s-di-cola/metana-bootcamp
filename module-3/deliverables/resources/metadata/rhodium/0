@@ -1,0 +1,19 @@
+{
+  "name": "Rhodium-Plated Necklace",
+  "description": "A rhodium-plated necklace shimmering under bright lights.",
+  "image": "ipfs://QmVbSKJBay3tiaTtWKypHmJvA6NhzK4FCtxPKhWqZiXAEH",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Rhodium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Necklace"
+    },
+    {
+      "trait_type": "Design",
+      "value": "Shimmering"
+    }
+  ]
+}

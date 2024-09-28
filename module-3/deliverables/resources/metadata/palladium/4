@@ -1,0 +1,19 @@
+{
+  "name": "Palladium Fuel Cell",
+  "description": "A futuristic palladium fuel cell powering a high-tech device.",
+  "image": "ipfs://QmUzCg7XmnEJU1JezBdJH9sGJfWXE8QE7VqZGzBUyoj1KR",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Palladium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Fuel Cell"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "High-Tech Device"
+    }
+  ]
+}

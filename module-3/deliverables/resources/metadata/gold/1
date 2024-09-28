@@ -1,0 +1,19 @@
+{
+  "name": "Gold Bar",
+  "description": "A gold bar stamped with purity markings, resting on a black background.",
+  "image": "ipfs://QmX53XfsChmz8Yas7bJ1JPHSHMTymH8eQB4BVqs5Nz9KNK",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Gold Bar"
+    },
+    {
+      "trait_type": "Markings",
+      "value": "Purity"
+    }
+  ]
+}

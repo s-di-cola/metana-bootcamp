@@ -1,0 +1,19 @@
+{
+  "name": "Glowing Iron Ingot",
+  "description": "An iron ingot glowing faintly in a blacksmith's forge, surrounded by sparks.",
+  "image": "ipfs://QmYbVwPrX43vjC5VDxzRNo6Km33qVbxgfmMcE8THcZwKT5",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Iron"
+    },
+    {
+      "trait_type": "State",
+      "value": "Glowing"
+    },
+    {
+      "trait_type": "Location",
+      "value": "Blacksmith's Forge"
+    }
+  ]
+}

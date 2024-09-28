@@ -1,0 +1,19 @@
+{
+  "name": "Copper Pipe with Patina",
+  "description": "A close-up shot of a copper pipe with patina forming on its surface.",
+  "image": "ipfs://QmVxtQHeWpJcpJEK31TqHfy9DSxW6rrSbx38heWx5WznA9",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Copper"
+    },
+    {
+      "trait_type": "Condition",
+      "value": "Aged"
+    },
+    {
+      "trait_type": "Feature",
+      "value": "Patina"
+    }
+  ]
+}

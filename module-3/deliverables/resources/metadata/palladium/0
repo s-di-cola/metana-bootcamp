@@ -1,0 +1,19 @@
+{
+  "name": "Palladium Ring",
+  "description": "A palladium ring with intricate Celtic designs, displayed on a stone surface.",
+  "image": "ipfs://QmW5TKPTFShCYFFfbYx14F6jS7uf7dCxqkTswBho3VC2XY",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Palladium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Ring"
+    },
+    {
+      "trait_type": "Design",
+      "value": "Celtic"
+    }
+  ]
+}

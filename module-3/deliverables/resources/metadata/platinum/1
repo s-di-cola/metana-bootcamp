@@ -1,0 +1,19 @@
+{
+  "name": "Platinum Records",
+  "description": "Platinum records hanging on a wall in a music studio.",
+  "image": "ipfs://file-Cha0P3ovMqoRx03TCdI0v1nZ",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Platinum"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Records"
+    },
+    {
+      "trait_type": "Location",
+      "value": "Music Studio"
+    }
+  ]
+}

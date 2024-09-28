@@ -1,0 +1,19 @@
+{
+  "name": "Golden Wheat Fields",
+  "description": "Golden wheat fields glowing under the setting sun.",
+  "image": "ipfs://QmSsuV8emH551qutFHszVi5qmiL5StteHgaYnf7grcb4tM",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Wheat"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Field"
+    },
+    {
+      "trait_type": "Lighting",
+      "value": "Golden Sunset"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Silver Mirror",
+  "description": "A polished silver mirror reflecting a starry night sky.",
+  "image": "ipfs://QmaRbp64AmutnnnpMH5LkGqRkbeETxatD59A6xPUDJmKb6",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Mirror"
+    },
+    {
+      "trait_type": "Reflection",
+      "value": "Starry Night"
+    }
+  ]
+}

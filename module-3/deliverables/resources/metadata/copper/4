@@ -1,0 +1,23 @@
+{
+  "name": "Copper Rooftops",
+  "description": "Copper rooftops of historic buildings glinting under the sun.",
+  "image": "ipfs://QmbCLLK2QZMf9JDAhXJuVzmRP2hoM63QTfSWZsgJvBVs1d",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Copper"
+    },
+    {
+      "trait_type": "Feature",
+      "value": "Rooftops"
+    },
+    {
+      "trait_type": "Condition",
+      "value": "Weathered"
+    },
+    {
+      "trait_type": "Patina",
+      "value": "Green"
+    }
+  ]
+}

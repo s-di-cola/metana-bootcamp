@@ -1,0 +1,19 @@
+{
+  "name": "Ornate Gold Crown",
+  "description": "An ornate gold crown embedded with colorful gemstones.",
+  "image": "ipfs://QmNWjFvoXaHgtgq2HJC4xJgUXJf14Z8MtXFTh2fg9a3P1i",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Gold"
+    },
+    {
+      "trait_type": "Adornment",
+      "value": "Gemstones"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Ornate"
+    }
+  ]
+}

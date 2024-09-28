@@ -1,0 +1,19 @@
+{
+  "name": "Platinum Ring",
+  "description": "A sleek platinum ring with a single diamond displayed on reflective glass.",
+  "image": "ipfs://file-mY5F9eMV0QixADAGxnX0FaPe",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Platinum"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Ring"
+    },
+    {
+      "trait_type": "Gemstone",
+      "value": "Diamond"
+    }
+  ]
+}
