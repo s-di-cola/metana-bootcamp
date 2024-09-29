@@ -34,3 +34,17 @@ yarn-error.log*
 # Remix IDE files
 *.code-workspace
 **/artifacts/**
+
+
+# Ignore Yarn specific directories
+.yarn/
+.pnp/
+
+# Ignore Yarn error logs
+yarn-error.log
+
+# Ignore packages directory if it's unintended (e.g., in a monorepo)
+packages/
+
+# Optionally, ignore yarn.lock (use with caution)
+# yarn.lock
