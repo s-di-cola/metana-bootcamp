@@ -1,0 +1,20 @@
+{
+  "name": "Platinum Credit Card",
+  "description": "Close-up of a platinum credit card with embossed numbers.",
+  "image": "ipfs://QmaYcGiJQSe3u7W3txJd22CqDehKkvdTumMLTocgWr9fZi/3.webp",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Platinum"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Credit Card"
+    },
+    {
+      "trait_type": "Feature",
+      "value": "Embossed Numbers"
+    }
+  ]
+}
+

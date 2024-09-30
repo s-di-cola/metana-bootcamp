@@ -1,0 +1,19 @@
+{
+  "name": "Rhodium-Plated Watch",
+  "description": "A high-end rhodium-plated watch with a minimalist design.",
+  "image": "ipfs://QmbFVvMUE6TUMS51SCHeo8TV31heAzweeuhShbGoxhAEyN/2.webp",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Rhodium"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Watch"
+    },
+    {
+      "trait_type": "Style",
+      "value": "Minimalist"
+    }
+  ]
+}

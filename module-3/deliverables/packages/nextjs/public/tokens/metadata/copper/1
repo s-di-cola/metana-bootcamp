@@ -1,0 +1,19 @@
+{
+  "name": "Copper Wires on Table",
+  "description": "Copper wires coiled neatly on a wooden table with tools around.",
+  "image": "ipfs://QmUwZ9DFHBBc3usxt47TV7ZogUz5M4Hap4PwaYbCDrugFA/1.webp",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Copper"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Wires"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Wooden Table"
+    }
+  ]
+}

@@ -1,70 +1,186 @@
 "use client";
 
-import Link from "next/link";
+import React, { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+import ForgeSystem from "~~/components/alchemy/ForgeSystem";
+import NFTCard from "~~/components/alchemy/NFTCard";
+import TradeModal from "~~/components/alchemy/TradeModal";
+import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { notification } from "~~/utils/scaffold-eth";
+
+const tokens = {
+  IRON: 0,
+  COPPER: 1,
+  SILVER: 2,
+  GOLD: 3,
+  PLATINUM: 4,
+  PALLADIUM: 5,
+  RHODIUM: 6,
+};
 
 const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
+  const [allTokensData, setAllTokensData] = useState([]);
+  const { address } = useAccount();
+
+  const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
+  const [selectedFromToken, setSelectedFromToken] = useState(null);
+  const [isTrading, setIsTrading] = useState(false);
+
+  const { data: balances, refetch: refetchBalances } = useScaffoldReadContract({
+    contractName: "Forgery",
+    functionName: "getBalances",
+    //@ts-ignore
+    args: address ? [address] : null,
+    enabled: !!address,
+  });
+
+  const { writeContractAsync, isMining } = useScaffoldWriteContract("Forgery");
+
+  const handleAction = useCallback(
+    async (action, tokenType, amount) => {
+      try {
+        const functionName =
+          action === "burn" ? "burn" : tokenType <= tokens.SILVER ? "forgeBasicToken" : "forgeCompoundToken";
+
+        console.log(`Attempting to ${action} token ${tokenType}`);
+        await writeContractAsync({
+          functionName,
+          args: [tokenType, amount],
+        });
+
+        notification.success(`Token ${action}ed successfully.`);
+        await refetchBalances();
+      } catch (error) {
+        console.error(`Error ${action}ing token:`, error);
+        notification.error(`Failed to ${action} token. See console for details.`);
+      }
+    },
+    [writeContractAsync, refetchBalances],
+  );
+
+  const handleTradeClick = token => {
+    setSelectedFromToken(token);
+    setIsTradeModalOpen(true);
+  };
+
+  const handleTrade = async (toTokenType, amount) => {
+    setIsTrading(true);
+    try {
+      const fromTokenType = tokens[selectedFromToken.tokenType];
+      console.log(`Trading ${amount} of ${selectedFromToken.tokenType} to ${Object.keys(tokens)[toTokenType]}`);
+
+      await writeContractAsync({
+        functionName: "trade",
+        args: [fromTokenType, toTokenType, amount],
+      });
+      notification.success(`Traded successfully.`);
+      await refetchBalances();
+    } catch (error) {
+      console.error(`Error trading tokens:`, error);
+      notification.error(`Failed to trade tokens. See console for details.`);
+    } finally {
+      setIsTrading(false);
+      setIsTradeModalOpen(false);
+    }
+  };
+
+  const loadTokenData = useCallback(async (tokenType, tokenIndex) => {
+    try {
+      const response = await fetch(`/tokens/metadata/${Object.keys(tokens)[tokenType].toLowerCase()}/${tokenIndex}`);
+      if (!response.ok) {
+        console.error(`Failed to fetch metadata for token ${tokenType} index ${tokenIndex}`);
+        return null;
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Failed to load metadata for token ${tokenType} index ${tokenIndex}:`, error);
+      return null;
+    }
+  }, []);
+
+  const loadAllTokens = useCallback(async () => {
+    if (!address) return; // Ensure the user is connected
+    const balancesData = balances || new Array(Object.keys(tokens).length).fill(0);
+
+    console.log("Balances:", balancesData);
+
+    const tokensArray = await Promise.all(
+      balancesData.map(async (balance, index) => {
+        const tokenIndex = index % 5;
+        const tokenData = await loadTokenData(index, tokenIndex);
+        return tokenData
+          ? {
+              ...tokenData,
+              tokenType: Object.keys(tokens)[index],
+              tokenIndex,
+              quantity: Number(balance),
+            }
+          : null;
+      }),
+    );
+    const filteredTokens = tokensArray.filter(Boolean);
+    console.log("All Tokens Data:", filteredTokens);
+    setAllTokensData(filteredTokens);
+  }, [balances, loadTokenData, address]);
+
+  useEffect(() => {
+    loadAllTokens();
+  }, [loadAllTokens, balances]);
 
   return (
-    <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
-          </div>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="flex flex-col items-center flex-grow pt-8 space-y-6">
+      <div className="px-5 text-center">
+        <h1 className="block text-2xl mb-2">Welcome to the</h1>
+        <h1 className="block text-3xl font-bold">Forgery</h1>
       </div>
-    </>
+      <ForgeSystem />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+        {allTokensData && allTokensData.length > 0 ? (
+          allTokensData.map((token, index) => (
+            <div key={index} className="flex">
+              <NFTCard
+                title={`${token.tokenType} - ${token.name}`}
+                description={token.description}
+                image={`/tokens/images/${token.tokenType.toLowerCase()}/${token.tokenIndex}.webp`}
+                quantity={token.quantity}
+                buttons={[
+                  {
+                    label: "Trade",
+                    variant: "btn-primary",
+                    disabled: isMining || token.quantity === 0,
+                    onClick: () => handleTradeClick(token),
+                  },
+                  {
+                    label: isMining ? <span className="loading loading-spinner loading-sm"></span> : "Forge",
+                    variant: "btn-secondary",
+                    disabled: isMining,
+                    onClick: () => handleAction("forge", tokens[token.tokenType], 1),
+                  },
+                  {
+                    label: isMining ? <span className="loading loading-spinner loading-sm"></span> : "Burn",
+                    variant: "btn-error",
+                    disabled: isMining || token.quantity === 0,
+                    onClick: () => handleAction("burn", tokens[token.tokenType], 1),
+                  },
+                ]}
+              />
+            </div>
+          ))
+        ) : (
+          <p>Loading NFT data...</p>
+        )}
+      </div>
+      {selectedFromToken && (
+        <TradeModal
+          isOpen={isTradeModalOpen}
+          onClose={() => setIsTradeModalOpen(false)}
+          fromToken={selectedFromToken}
+          onTrade={handleTrade}
+          isTrading={isTrading}
+        />
+      )}
+    </div>
   );
 };
 
