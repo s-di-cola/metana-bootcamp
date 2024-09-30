@@ -1,4 +1,4 @@
-# 🏗 Althemy dApp
+# 🏗 Alchemy dApp
 
 This repository contains a dApp that mimic the functionality of a forgery. There are few rules in this dApp:
 
