@@ -12,6 +12,12 @@ This repository contains a dApp that mimic the functionality of a forgery. There
 
 There is a cool down of 1 minute between each forging.
 
+The application is available at [https://alchemist-q6w3w3pyk-s-di-colas-projects.vercel.app/]()
+
+> **Warning:** The contract is deployed on holesky network at [https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010]().
+> Since holesky is not supported by OpenSea, the NFTs are not visible on OpenSea.
+
+
 ## Requirements
 
 Before you begin, you need to install the following tools:
