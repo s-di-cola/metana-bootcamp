@@ -15,6 +15,7 @@ npm install
 This module is about creating an ERC20 token. The ERC20 token is a standard interface for fungible tokens. The interface is defined in the ERC20.sol file. The token is created in the ERC20Token.sol file.
 
 It leverages the OpenZeppelin library, which is a library for secure smart contract development. The library provides secure and community-vetted code for the Ethereum ecosystem.
+
 ### Module 2: ERC721 Token
 
 This module is about creating an ERC721 token. The ERC721 token is a standard interface for non-fungible tokens.
@@ -41,3 +42,27 @@ The deliverable for this module are listed below:
     3. A Staker contract that allows users to stake their NFTs, earn ERC20 rewards (10 tokens per 24 hours), and withdraw or transfer their staked NFTs at any time.
 
   The implementation ensures secure communication between contracts, handles decimals correctly in ERC20 transfers, and allows users to claim rewards without withdrawing their NFTs. The staking mechanism is time-based and prevents exploitation through re-staking. The system also supports the transfer of staked NFTs, maintaining the staking state and rewards.
+
+### Module 3: Alchemy dApp
+
+This repository contains a dApp that mimics the functionality of a forgery. There are a few rules in this dApp:
+
+- Iron, Copper, and Silver are the only materials that can be used to create a forgery.
+- Gold can be forged by burning Iron and Copper.
+- Platinum can be forged by burning Copper and Silver.
+- Palladium can be forged by burning Iron and Silver.
+- Rhodium can be forged by burning Iron, Copper, and Silver.
+- Gold, Platinum, Palladium, and Rhodium cannot be forged into another.
+- Everything can be traded for Iron, Copper, and Silver.
+- There is a cooldown of 1 minute between each forging.
+
+The application is available at [https://alchemist-q6w3w3pyk-s-di-colas-projects.vercel.app/](https://alchemist-q6w3w3pyk-s-di-colas-projects.vercel.app/)
+> **Warning:** The contract is deployed on holesky network at [https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010](https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010).
+> Since holesky is not supported by OpenSea, the NFTs are not visible on OpenSea.
+
+> **Note:** The dApp leverages scaffold-eth2, to run the dApp locally, follow the instructions below:
+> 1. Install the dependencies
+> 2. Run a local network in the first terminal with `yarn chain`
+> 3. Deploy the test contract in the second terminal with `yarn deploy` (check the `hardhat.config.ts` file for the network configuration)
+> 4. Start your NextJS app in the third terminal with `yarn start` (visit your app on `http://localhost:3000`)
+
