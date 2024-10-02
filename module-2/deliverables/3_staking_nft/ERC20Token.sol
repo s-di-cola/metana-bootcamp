@@ -37,14 +37,18 @@ contract ERC20Token is ERC20, Ownable {
     function swapTokensForEther(uint256 _amount) external {
         uint256 ethAmount = _amount * EXCHANGE_RATE;
         require(balanceOf(msg.sender) >= _amount, "Insufficient balance");
-        require(address(this).balance >= ethAmount, "Insufficient contract balance");
+        require(
+            address(this).balance >= ethAmount,
+            "Insufficient contract balance"
+        );
 
         _burn(msg.sender, _amount);
         payable(msg.sender).transfer(ethAmount);
     }
 
     function withdrawEther() external onlyOwner {
-        uint256 excessEth = address(this).balance - (totalSupply() * EXCHANGE_RATE);
+        uint256 excessEth = address(this).balance -
+            (totalSupply() * EXCHANGE_RATE);
         require(excessEth > 0, "No excess ether to withdraw");
 
         payable(owner()).transfer(excessEth);

@@ -12,8 +12,14 @@ contract Minter {
     address public owner;
 
     constructor(address _erc20Exchange, address _erc721Exchange) {
-        require(_erc20Exchange != address(0), "ERC20Exchange address cannot be zero");
-        require(_erc721Exchange != address(0), "ERC721Exchange address cannot be zero");
+        require(
+            _erc20Exchange != address(0),
+            "ERC20Exchange address cannot be zero"
+        );
+        require(
+            _erc721Exchange != address(0),
+            "ERC721Exchange address cannot be zero"
+        );
         erc20Exchange = ERC20Exchange(_erc20Exchange);
         erc721Exchange = ERC721Exchange(_erc721Exchange);
         owner = msg.sender;
@@ -25,14 +31,26 @@ contract Minter {
     }
 
     function mint() external {
-        require(erc20Exchange.balanceOf(msg.sender) >= NFT_PRICE, "Insufficient balance");
-        require(erc20Exchange.allowance(msg.sender, address(this)) >= NFT_PRICE, "Insufficient allowance");
-        require(erc20Exchange.transferFrom(msg.sender, address(this), NFT_PRICE), "Transfer failed");
+        require(
+            erc20Exchange.balanceOf(msg.sender) >= NFT_PRICE,
+            "Insufficient balance"
+        );
+        require(
+            erc20Exchange.allowance(msg.sender, address(this)) >= NFT_PRICE,
+            "Insufficient allowance"
+        );
+        require(
+            erc20Exchange.transferFrom(msg.sender, address(this), NFT_PRICE),
+            "Transfer failed"
+        );
         erc721Exchange.mint(msg.sender);
     }
 
     function withdrawTEX(uint256 amount) external onlyOwner {
-        require(erc20Exchange.balanceOf(address(this)) >= amount, "Insufficient TEX balance");
+        require(
+            erc20Exchange.balanceOf(address(this)) >= amount,
+            "Insufficient TEX balance"
+        );
         require(erc20Exchange.transfer(owner, amount), "Transfer failed");
     }
 }

@@ -9,13 +9,12 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./ERC721Token.sol";
 import "./ERC20Token.sol";
 
-
 contract Staker is IERC721Receiver {
     using EnumerableSet for EnumerableSet.UintSet;
     ERC20Token private immutable erc20Token;
     ERC721Token private immutable erc721Token;
 
-    uint256 public constant  REWARD_CYCLE = 1 days;
+    uint256 public constant REWARD_CYCLE = 1 days;
 
     struct StakedNFT {
         uint256 stakingTimestamp;
@@ -47,7 +46,10 @@ contract Staker is IERC721Receiver {
     }
 
     function transferStakedNFT(address _to, uint256 _tokenId) external {
-        require(stakedNFTs[_tokenId][msg.sender].stakingTimestamp != 0, "Only the owner can transfer the NFT");
+        require(
+            stakedNFTs[_tokenId][msg.sender].stakingTimestamp != 0,
+            "Only the owner can transfer the NFT"
+        );
 
         erc721Token.safeTransferFrom(address(this), _to, _tokenId);
 
@@ -80,7 +82,7 @@ contract Staker is IERC721Receiver {
             uint256 stakedTokenId = stakerTokenIds[msg.sender].at(i);
             StakedNFT storage nftStake = stakedNFTs[stakedTokenId][msg.sender];
             uint256 stakingDuration = block.timestamp -
-                            nftStake.lastRewardClaimTimestamp;
+                nftStake.lastRewardClaimTimestamp;
             totalReward += calculateReward(stakingDuration);
             nftStake.lastRewardClaimTimestamp = block.timestamp;
         }

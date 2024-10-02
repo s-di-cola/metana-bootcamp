@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/interfaces/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./ERC20Token.sol";
 
-
 contract ERC721Token is ERC721, Ownable {
     uint256 public immutable MAX_SUPPLY;
     uint256 public immutable NFT_PRICE;
