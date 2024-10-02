@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"prettier": "prettier --write --plugin=prettier-plugin-solidity '**/*.sol'"
- 	},
+	},
 	"dependencies": {
 		"@openzeppelin/contracts": "^5.0.2",
 		"@remix-project/remixd": "^0.6.37"
@@ -11,6 +11,7 @@
 		"@nomiclabs/hardhat-solhint": "^4.0.1",
 		"hardhat": "^2.22.12",
 		"prettier": "^3.3.3",
-		"prettier-plugin-solidity": "^1.4.1"
+		"prettier-plugin-solidity": "^1.4.1",
+		"tsx": "^4.19.1"
 	}
 }
