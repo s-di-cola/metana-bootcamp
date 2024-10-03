@@ -1,0 +1,19 @@
+{
+  "name": "Silver Bullet",
+  "description": "A silver bullet resting on an old wooden surface.",
+  "image": "ipfs://QmQnQNhCwyGCQYfJgNs6wVUm83SdQ9QamVXMePVDtn17eG/4.webp",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Bullet"
+    },
+    {
+      "trait_type": "Setting",
+      "value": "Wooden Surface"
+    }
+  ]
+}

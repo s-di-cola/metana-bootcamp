@@ -1,0 +1,19 @@
+{
+  "name": "Silver Chalice",
+  "description": "A silver chalice adorned with precious stones on an altar.",
+  "image": "ipfs://QmQnQNhCwyGCQYfJgNs6wVUm83SdQ9QamVXMePVDtn17eG/2.webp",
+  "attributes": [
+    {
+      "trait_type": "Material",
+      "value": "Silver"
+    },
+    {
+      "trait_type": "Object",
+      "value": "Chalice"
+    },
+    {
+      "trait_type": "Adornment",
+      "value": "Precious Stones"
+    }
+  ]
+}
