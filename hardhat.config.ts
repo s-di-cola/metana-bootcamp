@@ -81,12 +81,6 @@ task("check", "Runs solhint on all Solidity files in the project").setAction(
   },
 );
 
-task("static-analysis", "Runs Slither on a file or directory").setAction(
-  async () => {
-    execSync("slither .", { stdio: "inherit" });
-  },
-);
-
 task("format", "Formats all Solidity files in the project")
   .addPositionalParam("target", "The file or directory to analyze")
   .setAction(async (taskArgs, hre) => {
