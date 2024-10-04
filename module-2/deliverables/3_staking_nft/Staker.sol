@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8;
+pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -29,50 +29,47 @@ contract Staker is IERC721Receiver {
     event RewardClaimed(address indexed staker, uint256 amount);
     event NTFStakedTransferred(address indexed staker, uint256 tokenId);
 
-    constructor(ERC20Token _erc20Token, ERC721Token _erc721Token) {
-        erc20Token = _erc20Token;
-        erc721Token = _erc721Token;
+    constructor(ERC20Token erc20Tkn, ERC721Token erc721Tkn) {
+        erc20Token = erc20Tkn;
+        erc721Token = erc721Tkn;
     }
 
-    function stakeNFT(uint256 _tokenId) external {
-        erc721Token.safeTransferFrom(msg.sender, address(this), _tokenId);
-        stakedNFTs[_tokenId][msg.sender] = StakedNFT({
+    function stakeNFT(uint256 tokenId) external {
+        stakedNFTs[tokenId][msg.sender] = StakedNFT({
             stakingTimestamp: block.timestamp,
             lastRewardClaimTimestamp: block.timestamp
         });
-        stakerTokenIds[msg.sender].add(_tokenId);
-
-        emit NFTStaked(msg.sender, _tokenId);
+        require(stakerTokenIds[msg.sender].add(tokenId), "Token already exists");
+        erc721Token.safeTransferFrom(msg.sender, address(this), tokenId);
+        emit NFTStaked(msg.sender, tokenId);
     }
 
-    function transferStakedNFT(address _to, uint256 _tokenId) external {
+    function transferStakedNFT(address to, uint256 tokenId) external {
         require(
-            stakedNFTs[_tokenId][msg.sender].stakingTimestamp != 0,
+            stakedNFTs[tokenId][msg.sender].stakingTimestamp != 0,
             "Only the owner can transfer the NFT"
         );
 
-        erc721Token.safeTransferFrom(address(this), _to, _tokenId);
+        stakedNFTs[tokenId][to] = stakedNFTs[tokenId][msg.sender];
+        delete stakedNFTs[tokenId][msg.sender];
+        require(stakerTokenIds[msg.sender].remove(tokenId), "Token not found");
+        require(stakerTokenIds[to].add(tokenId), "Token already exists");
 
-        stakedNFTs[_tokenId][_to] = stakedNFTs[_tokenId][msg.sender];
-        delete stakedNFTs[_tokenId][msg.sender];
-
-        stakerTokenIds[msg.sender].remove(_tokenId);
-        stakerTokenIds[_to].add(_tokenId);
-
-        emit NTFStakedTransferred(_to, _tokenId);
+        erc721Token.safeTransferFrom(address(this), to, tokenId);
+        emit NTFStakedTransferred(to, tokenId);
     }
 
-    function withdrawNFT(uint256 _tokenId) external {
+    function withdrawNFT(uint256 tokenId) external {
         require(
-            stakedNFTs[_tokenId][msg.sender].stakingTimestamp != 0,
+            stakedNFTs[tokenId][msg.sender].stakingTimestamp != 0,
             "Only the owner can withdraw the NFT"
         );
-        erc721Token.safeTransferFrom(address(this), msg.sender, _tokenId);
 
-        delete stakedNFTs[_tokenId][msg.sender];
-        stakerTokenIds[msg.sender].remove(_tokenId);
+        delete stakedNFTs[tokenId][msg.sender];
+        require(stakerTokenIds[msg.sender].remove(tokenId), "Token not found");
 
-        emit NFTWithdrawn(msg.sender, _tokenId);
+        erc721Token.safeTransferFrom(address(this), msg.sender, tokenId);
+        emit NFTWithdrawn(msg.sender, tokenId);
     }
 
     function withdrawReward() external {
@@ -82,7 +79,7 @@ contract Staker is IERC721Receiver {
             uint256 stakedTokenId = stakerTokenIds[msg.sender].at(i);
             StakedNFT storage nftStake = stakedNFTs[stakedTokenId][msg.sender];
             uint256 stakingDuration = block.timestamp -
-                nftStake.lastRewardClaimTimestamp;
+                            nftStake.lastRewardClaimTimestamp;
             totalReward += calculateReward(stakingDuration);
             nftStake.lastRewardClaimTimestamp = block.timestamp;
         }

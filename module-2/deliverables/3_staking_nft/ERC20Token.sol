@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8;
+pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -13,36 +13,36 @@ contract ERC20Token is ERC20, Ownable {
         _mint(msg.sender, INITIAL_SUPPLY);
     }
 
-    function setStaker(address _staker) external onlyOwner {
-        require(_staker != address(0), "Staker cannot be the zero address");
-        staker = _staker;
+    function setStaker(address stk) external onlyOwner {
+        require(stk != address(0), "Staker cannot be the zero address");
+        staker = stk;
     }
 
-    function mint(address _to, uint256 _amount) external {
+    function mint(address to, uint256 amount) external {
         require(msg.sender == staker, "Only the staker can mint tokens");
-        _mint(_to, _amount);
+        _mint(to, amount);
     }
 
-    function publicMint(address _to, uint256 _amount) external payable {
-        uint256 ethAmount = _amount * EXCHANGE_RATE;
+    function publicMint(address to, uint256 amount) external payable {
+        uint256 ethAmount = amount * EXCHANGE_RATE;
         require(msg.value >= ethAmount, "Insufficient ether sent");
 
-        _mint(_to, _amount);
+        _mint(to, amount);
 
         if (msg.value > ethAmount) {
             payable(msg.sender).transfer(msg.value - ethAmount);
         }
     }
 
-    function swapTokensForEther(uint256 _amount) external {
-        uint256 ethAmount = _amount * EXCHANGE_RATE;
-        require(balanceOf(msg.sender) >= _amount, "Insufficient balance");
+    function swapTokensForEther(uint256 amount) external {
+        uint256 ethAmount = amount * EXCHANGE_RATE;
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
         require(
             address(this).balance >= ethAmount,
             "Insufficient contract balance"
         );
 
-        _burn(msg.sender, _amount);
+        _burn(msg.sender, amount);
         payable(msg.sender).transfer(ethAmount);
     }
 

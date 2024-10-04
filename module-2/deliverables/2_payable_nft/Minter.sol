@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "./ERC721Exchange.sol";
@@ -9,7 +9,7 @@ contract Minter {
     uint256 public constant NFT_PRICE = 10 * 1e18;
     ERC20Exchange public immutable erc20Exchange;
     ERC721Exchange public immutable erc721Exchange;
-    address public owner;
+    address public immutable owner;
 
     constructor(address _erc20Exchange, address _erc721Exchange) {
         require(

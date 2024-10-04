@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8;
+pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -12,25 +12,25 @@ contract ERC721Token is ERC721, Ownable {
     uint256 public immutable MAX_SUPPLY;
     uint256 public immutable NFT_PRICE;
     uint256 public totalSupply;
-    ERC20Token public paymentToken;
+    ERC20Token public immutable paymentToken;
 
     constructor(
-        uint256 _maxSupply,
-        uint256 _nftPrice,
+        uint256 maxSupply,
+        uint256 nftPrice,
         ERC20Token _paymentToken
     ) ERC721("ERC721Token", "NKN") Ownable(msg.sender) {
-        MAX_SUPPLY = _maxSupply;
-        NFT_PRICE = _nftPrice;
+        MAX_SUPPLY = maxSupply;
+        NFT_PRICE = nftPrice;
         paymentToken = _paymentToken;
     }
 
-    function mint(uint256 _tokenId) external {
+    function mint(uint256 tokenId) external {
         require(totalSupply + 1 < MAX_SUPPLY, "Too many tokens");
+        totalSupply++;
         require(
             paymentToken.transferFrom(msg.sender, address(this), NFT_PRICE),
             "Transfer failed"
         );
-        _safeMint(msg.sender, _tokenId);
-        totalSupply++;
+        _safeMint(msg.sender, tokenId);
     }
 }
