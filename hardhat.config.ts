@@ -3,13 +3,14 @@ import "@nomicfoundation/hardhat-toolbox-viem";
 import "@nomiclabs/hardhat-solhint";
 import { glob } from "glob";
 import path from "path";
+import { exec } from "child_process";
 
 // Define the base configuration
 const config: HardhatUserConfig = {
   solidity: "0.8.27",
   paths: {
-    sources: "./contracts", // This will be overridden in the compile task
-    tests: "./test", // This will be overridden in the test task
+    sources: "./contracts",
+    tests: "./test",
   },
 };
 
@@ -79,5 +80,44 @@ task("check", "Runs solhint on all Solidity files in the project").setAction(
     console.log("Check completed.");
   },
 );
+
+task("static-analysis", "Runs Slither on a file or directory")
+  .addPositionalParam("target", "The file or directory to analyze")
+  .setAction(async (taskArgs, hre) => {
+    const rootDir = hre.config.paths.root;
+    let files = findSolidityFiles(rootDir);
+    // filter out files that are not in the target directory
+    if (taskArgs.target) {
+      const targetDir = path.resolve(rootDir, taskArgs.target);
+      files = files.filter((file) => file.startsWith(targetDir));
+    }
+    console.log(`Running Slither on ${files.length} files...`);
+
+    for (const file of files) {
+      console.log(`Running Slither on ${path.relative(rootDir, file)}...`);
+      exec(`slither ${file}`);
+    }
+    console.log("Slither completed.");
+  });
+
+task("format", "Formats all Solidity files in the project")
+  .addPositionalParam("target", "The file or directory to analyze")
+  .setAction(async (taskArgs, hre) => {
+    const rootDir = hre.config.paths.root;
+    let files = findSolidityFiles(rootDir);
+    if (taskArgs.target) {
+      const targetDir = path.resolve(rootDir, taskArgs.target);
+      files = files.filter((file) => file.startsWith(targetDir));
+    }
+
+    console.log(`Formatting ${files.length} Solidity files...`);
+
+    for (const file of files) {
+      console.log(`Formatting ${path.relative(rootDir, file)}...`);
+      exec(`prettier --write --plugin=prettier-plugin-solidity  ${file}`);
+    }
+
+    console.log("Format completed.");
+  });
 
 export default config;

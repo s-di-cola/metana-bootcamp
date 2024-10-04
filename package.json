@@ -4,7 +4,8 @@
 	},
 	"dependencies": {
 		"@openzeppelin/contracts": "^5.0.2",
-		"@remix-project/remixd": "^0.6.37"
+		"@remix-project/remixd": "^0.6.37",
+		"hardhat-slither": "^1.0.4"
 	},
 	"devDependencies": {
 		"@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
