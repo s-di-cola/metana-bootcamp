@@ -3,7 +3,7 @@ import "@nomicfoundation/hardhat-toolbox-viem";
 import "@nomiclabs/hardhat-solhint";
 import { glob } from "glob";
 import path from "path";
-import { exec } from "child_process";
+import { execSync } from "child_process";
 
 // Define the base configuration
 const config: HardhatUserConfig = {
@@ -81,24 +81,11 @@ task("check", "Runs solhint on all Solidity files in the project").setAction(
   },
 );
 
-task("static-analysis", "Runs Slither on a file or directory")
-  .addPositionalParam("target", "The file or directory to analyze")
-  .setAction(async (taskArgs, hre) => {
-    const rootDir = hre.config.paths.root;
-    let files = findSolidityFiles(rootDir);
-    // filter out files that are not in the target directory
-    if (taskArgs.target) {
-      const targetDir = path.resolve(rootDir, taskArgs.target);
-      files = files.filter((file) => file.startsWith(targetDir));
-    }
-    console.log(`Running Slither on ${files.length} files...`);
-
-    for (const file of files) {
-      console.log(`Running Slither on ${path.relative(rootDir, file)}...`);
-      exec(`slither ${file}`);
-    }
-    console.log("Slither completed.");
-  });
+task("static-analysis", "Runs Slither on a file or directory").setAction(
+  async () => {
+    execSync("slither .", { stdio: "inherit" });
+  },
+);
 
 task("format", "Formats all Solidity files in the project")
   .addPositionalParam("target", "The file or directory to analyze")
@@ -114,7 +101,9 @@ task("format", "Formats all Solidity files in the project")
 
     for (const file of files) {
       console.log(`Formatting ${path.relative(rootDir, file)}...`);
-      exec(`prettier --write --plugin=prettier-plugin-solidity  ${file}`);
+      execSync(`prettier --write --plugin=prettier-plugin-solidity  ${file}`, {
+        stdio: "inherit",
+      });
     }
 
     console.log("Format completed.");
