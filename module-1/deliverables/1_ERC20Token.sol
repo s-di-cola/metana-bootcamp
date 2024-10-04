@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "hardhat/console.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract ERC20Token is ERC20 {
     address public owner;
@@ -127,12 +128,8 @@ contract ERC20Token is ERC20 {
             "The contract does not have enough ether to pay you"
         );
 
-        bool isTransferSuccessful = transferFrom(
-            msg.sender,
-            address(this),
-            amount
-        );
-        require(isTransferSuccessful, "Transfer to contract failed");
+        require(transfer(address(this), amount), "Transfer to contract failed");
+
 
         payable(msg.sender).sendValue(etherAmount);
         emit TokensSold(msg.sender, amount, etherAmount);
