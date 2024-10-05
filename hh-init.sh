@@ -25,10 +25,10 @@ create_contract_symlinks() {
     done
 }
 
-# Function to create symlinks for test files inside 'tests' directories, excluding node_modules
+# Function to create symlinks for test files inside 'test' directories, excluding node_modules
 create_test_symlinks() {
     find . -type f \( -name "*Test.ts" -o -name "*test.ts" \) \
-        -path "*/tests/*" \
+        -path "*/test/*" \
         ! -path "./test/*" \
         ! -path "*/node_modules/*" \
         -print0 | while IFS= read -r -d '' file; do
