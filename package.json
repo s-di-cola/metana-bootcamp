@@ -8,6 +8,7 @@
 		"hardhat-slither": "^1.0.4"
 	},
 	"devDependencies": {
+		"@morenabarboni/sumo": "^2.5.4",
 		"@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
 		"@nomiclabs/hardhat-solhint": "^4.0.1",
 		"chai-bn": "^0.3.1",
