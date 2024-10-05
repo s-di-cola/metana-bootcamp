@@ -9,7 +9,7 @@ chai.use(require("chai-bn")(BN));
 describe("ERC20Token", () => {
   async function deployContract() {
     const erc20Token = await hre.viem.deployContract(
-      "contracts/module-1_1_ERC20Token.sol:ERC20Token",
+      "contracts/module-1/deliverables/1_ERC20Token.sol:ERC20Token",
       ["Test Token", "TT"],
     );
     const [owner, user] = await hre.viem.getWalletClients();
