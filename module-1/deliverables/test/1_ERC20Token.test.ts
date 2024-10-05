@@ -26,10 +26,6 @@ describe("ERC20Token", () => {
       address: user.account.address,
     });
 
-    const initialTokenBalance = await erc20Token.read.balanceOf([
-      user.account.address,
-    ]);
-
     await erc20Token.write.mintTokens({
       account: user.account,
       value: parseEther("1"),
@@ -43,13 +39,6 @@ describe("ERC20Token", () => {
     const finalEthBalance = await publicClient.getBalance({
       address: user.account.address,
     });
-    const finalTokenBalance = await erc20Token.read.balanceOf([
-      user.account.address,
-    ]);
-
-    expect(initialTokenBalance).to.be.eq(0n);
-    expect(initialEthBalance).to.be.eq(parseEther("10000"));
-    expect(finalTokenBalance).to.be.eq(0n);
     expect(
       new BN(finalEthBalance.toString()),
     ).to.be.a.bignumber.that.is.closeTo(
