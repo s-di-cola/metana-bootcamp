@@ -66,7 +66,7 @@ contract AlchemyTokens is IAlchemyTokens, ERC1155, Ownable {
         address account,
         Token token,
         uint256 amount
-    ) private onlyOwner withCoolDown {
+    ) private withCoolDown {
         _mint(account, uint256(token), amount, "");
         _tokensMinted[token] += amount;
         lastMinted = block.timestamp;
@@ -77,10 +77,6 @@ contract AlchemyTokens is IAlchemyTokens, ERC1155, Ownable {
         Token token,
         uint256 amount
     ) external onlyOwner {
-        require(
-            token <= Token.SILVER,
-            "Can only mint IRON, COPPER, or SILVER"
-        );
         _mintToken(account, token, amount);
     }
 
@@ -89,10 +85,6 @@ contract AlchemyTokens is IAlchemyTokens, ERC1155, Ownable {
         Token token,
         uint256 amount
     ) external onlyOwner {
-        require(
-            token > Token.SILVER && token <= Token.RHODIUM,
-            "Invalid compound token"
-        );
         Token[3] memory requiredTokens;
         uint8 requiredTokenCount = 0;
 
@@ -131,9 +123,5 @@ contract AlchemyTokens is IAlchemyTokens, ERC1155, Ownable {
 
     function getTokensMinted(Token token) external view returns (uint256) {
         return _tokensMinted[token];
-    }
-
-    function getBaseUri(Token token) external view returns (string memory) {
-        return _baseUris[token];
     }
 }

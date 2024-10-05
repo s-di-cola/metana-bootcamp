@@ -1,5 +1,5 @@
 import hre from "hardhat";
-import { parseEther } from "viem";
+import { formatEther, parseAbi, parseEther } from "viem";
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox-viem/network-helpers";
 import { Account, WalletClient, TestClient } from "viem";
@@ -124,6 +124,12 @@ describe("Forgery", () => {
     expect(balances[Tokens.GOLD]).to.equal(parseEther("5"));
   });
 
+  it("should not forge basic token when forging compound tokens ", async () => {
+    await expect(
+      forgery.write.forgeCompoundToken([Tokens.IRON, parseEther("10")]),
+    ).to.be.rejectedWith("Invalid compound token");
+  });
+
   it("should not forge GOLD with insufficient balance", async () => {
     await expect(
       forgeCompoundToken(Tokens.GOLD, "5", user.account),
@@ -193,6 +199,12 @@ describe("Forgery", () => {
     ).to.be.rejectedWith("Insufficient balance");
   });
 
+  it("should not trade compound tokens", async () => {
+    await expect(
+      forgery.write.trade([Tokens.GOLD, Tokens.PALLADIUM, parseEther("1")]),
+    ).to.be.rejectedWith("Can only trade to IRON, COPPER, or SILVER");
+  });
+
   it("should trade compound tokens for basic tokens", async () => {
     await forgeBasicToken(Tokens.IRON, "50", user.account);
     await increaseTime();
@@ -221,6 +233,86 @@ describe("Forgery", () => {
       forgery.write.trade([Tokens.PALLADIUM, Tokens.COPPER, parseEther("30")], {
         account: user.account,
       }),
+    ).to.be.rejectedWith("Insufficient balance");
+  });
+
+  it("should get token URI", async () => {
+    await forgeBasicToken(Tokens.IRON, "50", user.account);
+    expect(await forgery.read.getTokenURI([Tokens.IRON, 0])).to.be.eq(
+      "ipfs://QmZ3ae8RvL91RiVxy6MHC7Zw33cNMUZh9jgHanRppN17ci/0.json",
+    );
+  });
+  it("should fail to return a URI for a non existing token ", async () => {
+    await expect(
+      forgery.read.getTokenURI([Tokens.RHODIUM, 5]),
+    ).to.be.rejectedWith("Token does not exist");
+  });
+
+  it("should get last minted time", async () => {
+    const publicClient = await hre.viem.getPublicClient();
+    const currentBlock = await publicClient.getBlock();
+    const currentTimestamp = currentBlock.timestamp;
+
+    let nextTimeStamp = currentTimestamp + BigInt(10);
+    await testClient.setNextBlockTimestamp({
+      timestamp: nextTimeStamp,
+    });
+
+    await forgeBasicToken(Tokens.COPPER, "80", user.account);
+    expect(await forgery.read.getLastMintedTime()).to.be.eq(nextTimeStamp);
+  });
+
+  it("should get tokens forged by id", async () => {
+    await forgeBasicToken(Tokens.COPPER, "100", user.account);
+    expect(await forgery.read.getTokensMinted([Tokens.COPPER])).to.be.eq(
+      parseEther("100"),
+    );
+  });
+
+  it("should fail to mint a basic token when a non owner", async () => {
+    const alchemyTokens = await forgery.read.alchemyTokens();
+    const alchemyContract = await hre.viem.getContractAt(
+      "AlchemyTokens",
+      alchemyTokens,
+    );
+    await expect(
+      alchemyContract.write.mintBasicToken(
+        [user.account.address, Tokens.IRON, parseEther("1")],
+        {
+          account: user.account,
+        },
+      ),
+    ).to.be.rejectedWith("OwnableUnauthorizedAccount");
+  });
+
+  it("should fail to mint a compound token when a non owner", async () => {
+    const alchemyTokens = await forgery.read.alchemyTokens();
+    const alchemyContract = await hre.viem.getContractAt(
+      "AlchemyTokens",
+      alchemyTokens,
+    );
+    await expect(
+      alchemyContract.write.mintCompoundToken(
+        [user.account.address, Tokens.RHODIUM, parseEther("1")],
+        {
+          account: user.account,
+        },
+      ),
+    ).to.be.rejectedWith("OwnableUnauthorizedAccount");
+  });
+
+  it("should fail to burn when insufficient balance", async () => {
+    const alchemyTokens = await forgery.read.alchemyTokens();
+    const alchemyContract = await hre.viem.getContractAt(
+      "AlchemyTokens",
+      alchemyTokens,
+    );
+    await expect(
+      alchemyContract.write.burn([
+        user.account.address,
+        Tokens.PALLADIUM,
+        parseEther("100"),
+      ]),
     ).to.be.rejectedWith("Insufficient balance");
   });
 });

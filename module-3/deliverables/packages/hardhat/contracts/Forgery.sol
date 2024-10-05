@@ -44,10 +44,6 @@ contract Forgery {
 		alchemyTokens.mintCompoundToken(msg.sender, token, amount);
 	}
 
-	function burn(IAlchemyTokens.Token token, uint256 amount) external {
-		alchemyTokens.burn(msg.sender, token, amount);
-	}
-
 	function trade(
 		IAlchemyTokens.Token from,
 		IAlchemyTokens.Token to,
