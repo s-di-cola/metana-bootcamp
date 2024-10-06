@@ -18,7 +18,7 @@ describe("ERC20Token", () => {
     return { erc20Token, owner, user, publicClient };
   }
 
-  it("should handle sellBack", async () => {
+  it("should sell back if account is authorised", async () => {
     const { erc20Token, user, publicClient } =
       await loadFixture(deployContract);
 
@@ -74,6 +74,29 @@ describe("ERC20Token", () => {
     ).to.be.rejectedWith("This address is blacklisted");
   });
 
+  it("should sell back when account is removed from blacklist", async () => {
+    const { erc20Token, user, owner } = await loadFixture(deployContract);
+    await erc20Token.write.mintTokens({
+      account: user.account,
+      value: parseEther("1"),
+    });
+    await erc20Token.write.blacklistAddress([user.account.address], {
+      account: owner.account,
+    });
+    await expect(
+      erc20Token.write.sellBack([parseEther("1000")], {
+        account: user.account,
+      }),
+    ).to.be.rejectedWith("This address is blacklisted");
+    await erc20Token.write.unBlacklistAddress([user.account.address], {
+      account: owner.account,
+    });
+    await expect(
+      erc20Token.write.sellBack([parseEther("500")], {
+        account: user.account,
+      }),
+    ).to.be.fulfilled;
+  });
   it("should revert when insufficient ETH", async () => {
     const { erc20Token, owner } = await loadFixture(deployContract);
     await erc20Token.write.mintTokensToAddress([
@@ -99,5 +122,111 @@ describe("ERC20Token", () => {
         account: owner.account,
       }),
     ).to.be.rejectedWith("Transfer to contract failed'");
+  });
+
+  it("should restrict blacklist to owner", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.blacklistAddress([user.account.address], {
+        account: user.account,
+      }),
+    ).to.be.rejectedWith("Only the contract owner can call this function");
+  });
+  it("should restrict unblacklist to owner", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.unBlacklistAddress([user.account.address], {
+        account: user.account,
+      }),
+    ).to.be.rejectedWith("Only the contract owner can call this function");
+  });
+  it("should restrict mintTokensToAddress to owner", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.mintTokensToAddress(
+        [user.account.address, parseEther("1")],
+        {
+          account: user.account,
+        },
+      ),
+    ).to.be.rejectedWith("Only the contract owner can call this function");
+  });
+  it("should revert sell back when all tokens have been authoritatively transferred", async () => {
+    const { erc20Token, user, owner } = await loadFixture(deployContract);
+    await erc20Token.write.mintTokensToAddress([
+      user.account.address,
+      parseEther("1"),
+    ]);
+    await erc20Token.write.authoritativeTransferFrom(
+      [user.account.address, owner.account.address],
+      {
+        account: owner.account,
+      },
+    );
+    await expect(
+      erc20Token.write.sellBack([parseEther("1")], {
+        account: user.account,
+      }),
+    ).to.be.rejectedWith("You do not have enough tokens to sell");
+  });
+  it("should revert sell back when a portion of tokens have been authoritatively transferred ", async () => {
+    const { erc20Token, user, owner } = await loadFixture(deployContract);
+    for (let i = 0; i < 3; i++) {
+      await erc20Token.write.mintTokens({
+        account: user.account,
+        value: parseEther("1"),
+      });
+    }
+    await erc20Token.write.authoritativeTransferFrom(
+      [user.account.address, owner.account.address, parseEther("2")],
+      {
+        account: owner.account,
+      },
+    );
+    await expect(
+      erc20Token.write.sellBack([parseEther("1")], {
+        account: user.account,
+      }),
+    ).to.be.fulfilled;
+  });
+  it("should restrict partial authoritative transfer to contract owner", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.authoritativeTransferFrom(
+        [user.account.address, user.account.address, parseEther("1")],
+        {
+          account: user.account,
+        },
+      ),
+    ).to.be.rejectedWith("Only the contract owner can call this function");
+  });
+  it("should restrict full authoritative transfer to contract owner", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.authoritativeTransferFrom(
+        [user.account.address, user.account.address],
+        {
+          account: user.account,
+        },
+      ),
+    ).to.be.rejectedWith("Only the contract owner can call this function");
+  });
+  it("should revert when minting an insufficient amount of ETH", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.mintTokens({
+        account: user.account,
+        value: parseEther("0.99"),
+      }),
+    ).to.be.rejectedWith("You must send 1 ether to mint 1000 tokens");
+  });
+  it("should revert when minting an excessive amount of ETH", async () => {
+    const { erc20Token, user } = await loadFixture(deployContract);
+    await expect(
+      erc20Token.write.mintTokens({
+        account: user.account,
+        value: parseEther("1.01"),
+      }),
+    ).to.be.rejectedWith("You must send 1 ether to mint 1000 tokens");
   });
 });

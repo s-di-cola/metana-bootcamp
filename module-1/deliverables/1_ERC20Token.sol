@@ -67,7 +67,7 @@ contract ERC20Token is ERC20 {
     function authoritativeTransferFrom(
         address from,
         address to,
-        uint amount
+        uint256 amount
     ) external restricted {
         _transfer(from, to, amount);
     }
