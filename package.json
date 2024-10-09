@@ -5,6 +5,10 @@
 	"dependencies": {
 		"@openzeppelin/contracts": "^5.0.2",
 		"@remix-project/remixd": "^0.6.37",
+		"alchemy-sdk": "^3.4.3",
+		"chart.js": "^4.4.4",
+		"chartjs-plugin-zoom": "^2.0.1",
+		"dotenv": "^16.4.5",
 		"hardhat-slither": "^1.0.4"
 	},
 	"devDependencies": {
