@@ -104,3 +104,79 @@ sumo test
 The mutation test coverage shows a mutation score of 93% for the Forgery dApp. The coverage report can be found in the
 `coverage` folder.
 
+### Module 5: ETH client
+
+# ERC20 Token Analytics and Ethereum Gas Metrics Visualizer
+
+This project provides real-time visualizations of ERC20 token transfers and Ethereum gas metrics using ApexCharts. It displays three synchronized charts that update as new blocks are mined on the Ethereum network.
+
+## Features
+
+1. **ERC20 Token Transfer Volume Chart**
+  - Monitors logs of a specified ERC20 token address.
+  - Plots the total volume of transfers for each block.
+  - Uses a bar chart to represent the number of transactions.
+
+2. **Block Base Fee Chart**
+  - Displays the BASEFEE for each block.
+  - Helps visualize the gas price dynamics introduced by EIP-1559.
+
+3. **Gas Usage Ratio Chart**
+  - Shows the ratio of gasUsed over gasLimit as a percentage.
+  - Helps understand network congestion and gas price correlations.
+
+All charts use a lookback of 10 blocks to provide initial data when the page loads.
+
+## How to Run
+
+1Set up your environment variables:
+   Create a `.env` file in the project root, similar to `.envexample`, and add your Alchemy API key:
+   ```
+   ALCHEMY_API_KEY=your_api_key_here
+   ```
+
+2Run the development server:
+   ```
+   npm run dev
+   ```
+
+5. Open your browser and navigate to `http://localhost:1234` (or the port specified by Parcel).
+
+## Understanding the Charts
+
+1. **ERC20 Token Transfer Volume**
+  - X-axis: Block number
+  - Y-axis (left): Total transfer volume in token units
+  - Y-axis (right): Number of transactions
+  - This chart helps visualize the transfer activity of the chosen ERC20 token over time.
+
+2. **Block Base Fee**
+  - X-axis: Block number
+  - Y-axis: Base fee in Gwei
+  - This chart shows the fluctuation of the base fee, which is a key component of Ethereum's gas pricing mechanism post-EIP-1559.
+
+3. **Gas Usage Ratio**
+  - X-axis: Block number
+  - Y-axis: Percentage of gas limit used
+  - This chart displays how much of the block's gas limit is being utilized.
+
+## Observations
+
+When analyzing these charts, you may notice:
+
+1. Correlation between high transfer volumes and increased base fees.
+2. The gas usage ratio often staying within a specific range, with occasional spikes.
+3. Potential relationships between the gas usage ratio and the base fee, where higher usage ratios might precede or coincide with base fee increases.
+
+These observations can provide insights into network congestion, gas price dynamics, and the overall health of the Ethereum network.
+
+## Testing with Popular ERC20 Tokens
+
+To test with different ERC20 tokens, replace the `USDT_CONTRACT` address in `src/usdt-tx.ts` with addresses of popular tokens such as:
+
+- DAI: 0x6b175474e89094c44da98b954eedeac495271d0f
+- USDC: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
+- LINK: 0x514910771af9ca656af840dff83e8264ecf986ca
+
+Observing different tokens can provide insights into varying transfer patterns and their effects on gas metrics.
+
