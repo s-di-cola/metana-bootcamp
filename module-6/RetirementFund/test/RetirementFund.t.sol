@@ -16,12 +16,13 @@ contract RetirementFundTest is Test {
     }
 
     function testIncrement() public {
-        vm.deal(address(exploitContract), 1 ether);
         // Test your Exploit Contract below
         // Use the instance retirementFund and exploitContract
         vm.startPrank(player);
         // Put your solution here
-
+        vm.deal(address(exploitContract), 1 ether);
+        exploitContract.attack();
+        retirementFund.collectPenalty();
         _checkSolved();
     }
 
