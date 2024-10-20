@@ -70,7 +70,8 @@ This module contains a dApp that mimics the functionality of a forgery. There ar
 The application is available
 at [https://alchemist-q6w3w3pyk-s-di-colas-projects.vercel.app/](https://alchemist-q6w3w3pyk-s-di-colas-projects.vercel.app/)
 > **Warning:** The contract is deployed on holesky network
-> at [https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010](https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010).
+>
+at [https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010](https://holesky.etherscan.io/address/0x90B78FF67D038557B93aF531866e0Ff7FB7bC010).
 > Since holesky is not supported by OpenSea, the NFTs are not visible on OpenSea.
 
 > **Note:** The dApp leverages scaffold-eth2, to run the dApp locally, follow the instructions below:
@@ -108,34 +109,40 @@ The mutation test coverage shows a mutation score of 93% for the Forgery dApp. T
 
 # ERC20 Token Analytics and Ethereum Gas Metrics Visualizer
 
-This project provides real-time visualizations of ERC20 token transfers and Ethereum gas metrics using ApexCharts. It displays three synchronized charts that update as new blocks are mined on the Ethereum network.
+This project provides real-time visualizations of ERC20 token transfers and Ethereum gas metrics using ApexCharts. It
+displays three synchronized charts that update as new blocks are mined on the Ethereum network.
 
 ## Features
 
 1. **ERC20 Token Transfer Volume Chart**
-  - Monitors logs of a specified ERC20 token address.
-  - Plots the total volume of transfers for each block.
-  - Uses a bar chart to represent the number of transactions.
+
+- Monitors logs of a specified ERC20 token address.
+- Plots the total volume of transfers for each block.
+- Uses a bar chart to represent the number of transactions.
 
 2. **Block Base Fee Chart**
-  - Displays the BASEFEE for each block.
-  - Helps visualize the gas price dynamics introduced by EIP-1559.
+
+- Displays the BASEFEE for each block.
+- Helps visualize the gas price dynamics introduced by EIP-1559.
 
 3. **Gas Usage Ratio Chart**
-  - Shows the ratio of gasUsed over gasLimit as a percentage.
-  - Helps understand network congestion and gas price correlations.
+
+- Shows the ratio of gasUsed over gasLimit as a percentage.
+- Helps understand network congestion and gas price correlations.
 
 All charts use a lookback of 10 blocks to provide initial data when the page loads.
 
 ## How to Run
 
 1Set up your environment variables:
-   Create a `.env` file in the project root, similar to `.envexample`, and add your Alchemy API key:
+Create a `.env` file in the project root, similar to `.envexample`, and add your Alchemy API key:
+
    ```
    ALCHEMY_API_KEY=your_api_key_here
    ```
 
 2Run the development server:
+
    ```
    npm run dev
    ```
@@ -145,20 +152,24 @@ All charts use a lookback of 10 blocks to provide initial data when the page loa
 ## Understanding the Charts
 
 1. **ERC20 Token Transfer Volume**
-  - X-axis: Block number
-  - Y-axis (left): Total transfer volume in token units
-  - Y-axis (right): Number of transactions
-  - This chart helps visualize the transfer activity of the chosen ERC20 token over time.
+
+- X-axis: Block number
+- Y-axis (left): Total transfer volume in token units
+- Y-axis (right): Number of transactions
+- This chart helps visualize the transfer activity of the chosen ERC20 token over time.
 
 2. **Block Base Fee**
-  - X-axis: Block number
-  - Y-axis: Base fee in Gwei
-  - This chart shows the fluctuation of the base fee, which is a key component of Ethereum's gas pricing mechanism post-EIP-1559.
+
+- X-axis: Block number
+- Y-axis: Base fee in Gwei
+- This chart shows the fluctuation of the base fee, which is a key component of Ethereum's gas pricing mechanism
+  post-EIP-1559.
 
 3. **Gas Usage Ratio**
-  - X-axis: Block number
-  - Y-axis: Percentage of gas limit used
-  - This chart displays how much of the block's gas limit is being utilized.
+
+- X-axis: Block number
+- Y-axis: Percentage of gas limit used
+- This chart displays how much of the block's gas limit is being utilized.
 
 ## Observations
 
@@ -166,13 +177,16 @@ When analyzing these charts, you may notice:
 
 1. Correlation between high transfer volumes and increased base fees.
 2. The gas usage ratio often staying within a specific range, with occasional spikes.
-3. Potential relationships between the gas usage ratio and the base fee, where higher usage ratios might precede or coincide with base fee increases.
+3. Potential relationships between the gas usage ratio and the base fee, where higher usage ratios might precede or
+   coincide with base fee increases.
 
-These observations can provide insights into network congestion, gas price dynamics, and the overall health of the Ethereum network.
+These observations can provide insights into network congestion, gas price dynamics, and the overall health of the
+Ethereum network.
 
 ## Testing with Popular ERC20 Tokens
 
-To test with different ERC20 tokens, replace the `USDT_CONTRACT` address in `src/usdt-tx.ts` with addresses of popular tokens such as:
+To test with different ERC20 tokens, replace the `USDT_CONTRACT` address in `src/usdt-tx.ts` with addresses of popular
+tokens such as:
 
 - DAI: 0x6b175474e89094c44da98b954eedeac495271d0f
 - USDC: 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
@@ -180,3 +194,16 @@ To test with different ERC20 tokens, replace the `USDT_CONTRACT` address in `src
 
 Observing different tokens can provide insights into varying transfer patterns and their effects on gas metrics.
 
+### Module 6: Security Basics
+
+This module covers the basics of smart contract security, including common vulnerabilities and best practices. The
+deliverables for this module are:
+
+- Ethernaut: A series of smart contract security challenges that test your knowledge of common vulnerabilities and best
+  practices. The challenges cover topics such as reentrancy, denial of service, and integer overflow. The Ethernaut
+  challenges are available at [https://ethernaut.openzeppelin.com/](https://ethernaut.openzeppelin.com/).
+- Capture The Ether Foundry: A foundry environment to practice the problems
+  on [capturetheether.com](https://capturetheether.com/). The problems run on a defunct testnet and use an older version
+  of Solidity. This repository doesn't depend on testnets and uses the latest Solidity version. Some problems could not
+  be ported because they rely on vulnerabilities that only existed in older versions of Solidity. Some liberty has been
+  taken where the syntax and other compiler features are no longer compatible. The foundry environment is available at [
