@@ -3,7 +3,8 @@
 		"prettier": "prettier --write --plugin=prettier-plugin-solidity '**/*.sol'"
 	},
 	"dependencies": {
-		"@openzeppelin/contracts": "^5.0.2",
+		"@openzeppelin/contracts": "^5.1.0",
+		"@openzeppelin/merkle-tree": "^1.0.7",
 		"@remix-project/remixd": "^0.6.37",
 		"alchemy-sdk": "^3.4.3",
 		"chart.js": "^4.4.4",

