@@ -3,13 +3,10 @@ pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
-contract MetanaOpenseaV2 is ERC721Upgradeable {
+contract MetanaOpenSeaV2 is ERC721Upgradeable {
     uint8 public constant MAX_SUPPLY = 100;
     uint8 public tokenSupply;
 
-    function initialize(string memory symbol) public initializer {
-        __ERC721_init("Metana Opensea V2", symbol);
-    }
 
     function mint() external {
         require(tokenSupply < MAX_SUPPLY, "Max supply reached");

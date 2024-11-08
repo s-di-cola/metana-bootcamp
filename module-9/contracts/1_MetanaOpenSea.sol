@@ -3,7 +3,7 @@ pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
-contract MetanaOpensea is ERC721Upgradeable {
+contract MetanaOpenSea is ERC721Upgradeable {
     uint8 public constant MAX_SUPPLY = 10;
     uint8 public tokenSupply;
 

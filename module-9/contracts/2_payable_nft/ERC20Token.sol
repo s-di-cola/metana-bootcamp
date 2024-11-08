@@ -3,11 +3,11 @@ pragma solidity ^0.8.27;
 
 import "@openzeppelin/contracts/utils/Address.sol";
 import "hardhat/console.sol";
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 
-contract ERC20Token is ERC20 {
+contract ERC20Token is ERC20Upgradeable {
     address public owner;
-    uint256 public immutable MAX_SUPPLY;
+    uint256 public constant MAX_SUPPLY=1_000_000 * 1e18;
     mapping(address => bool) public isBlacklisted;
     using Address for address payable;
 
@@ -17,12 +17,12 @@ contract ERC20Token is ERC20 {
         uint256 etherAmount
     );
 
-    constructor(
+    function initialize(
         string memory tokenName,
         string memory tokenSymbol
-    ) ERC20(tokenName, tokenSymbol) {
+    ) public virtual initializer {
+        __ERC20_init(tokenName, tokenSymbol);
         owner = msg.sender;
-        MAX_SUPPLY = 1_000_000 * 10 ** decimals();
     }
 
     modifier restricted() {
