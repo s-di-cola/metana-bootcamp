@@ -1,1 +1,0 @@
-/Users/sdicola/WebstormProjects/metana/metana-bootcamp/module-2/deliverables/2_payable_nft/Minter.sol

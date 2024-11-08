@@ -1,1 +1,0 @@
-/Users/sdicola/WebstormProjects/metana/metana-bootcamp/mocks/MockERC20Token.sol

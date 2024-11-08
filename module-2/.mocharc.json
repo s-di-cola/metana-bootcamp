@@ -1,0 +1,4 @@
+{
+  "require": ["tsx/cjs", "./scripts/mocha-hooks.ts"],
+  "timeout": 40000
+}
