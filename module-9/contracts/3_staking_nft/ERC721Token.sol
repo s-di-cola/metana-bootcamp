@@ -8,16 +8,16 @@ import "@openzeppelin/contracts/interfaces/IERC721Receiver.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "./ERC20Token.sol";
 
-contract ERC721Token is ERC721, Ownable {
+contract S_ERC721Token is ERC721, Ownable {
     uint256 public immutable MAX_SUPPLY;
     uint256 public immutable NFT_PRICE;
     uint256 public totalSupply;
-    ERC20Token public immutable paymentToken;
+    S_ERC20Token public immutable paymentToken;
 
     constructor(
         uint256 maxSupply,
         uint256 nftPrice,
-        ERC20Token _paymentToken
+        S_ERC20Token _paymentToken
     ) ERC721("ERC721Token", "NKN") Ownable(msg.sender) {
         MAX_SUPPLY = maxSupply;
         NFT_PRICE = nftPrice;

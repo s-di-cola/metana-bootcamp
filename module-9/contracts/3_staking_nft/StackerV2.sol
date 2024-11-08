@@ -7,11 +7,10 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./ERC721Token.sol";
 import "./ERC20Token.sol";
 
-contract Staker is ERC721HolderUpgradeable, UUPSUpgradeable, OwnableUpgradeable {
+contract StakerV2 is ERC721HolderUpgradeable, UUPSUpgradeable, OwnableUpgradeable {
     using EnumerableSet for EnumerableSet.UintSet;
-    S_ERC20Token private  erc20Token;
+    S_ERC20Token private erc20Token;
     S_ERC721Token private erc721Token;
-
     uint256 public constant REWARD_CYCLE = 1 days;
 
     struct StakedNFT {
@@ -21,21 +20,33 @@ contract Staker is ERC721HolderUpgradeable, UUPSUpgradeable, OwnableUpgradeable 
 
     mapping(uint256 => mapping(address => StakedNFT)) public stakedNFTs;
     mapping(address => EnumerableSet.UintSet) private stakerTokenIds;
+    // New variable for V2
+    uint256 public rewardMultiplier;
 
     event NFTStaked(address indexed staker, uint256 tokenId);
     event NFTWithdrawn(address indexed staker, uint256 tokenId);
     event RewardClaimed(address indexed staker, uint256 amount);
     event NTFStakedTransferred(address indexed staker, uint256 tokenId);
+    // New event for V2
+    event RewardMultiplierUpdated(uint256 newMultiplier);
 
-    function initialize(S_ERC20Token erc20Tkn, S_ERC721Token erc721Tkn) public initializer {
+    function initialize(S_ERC20Token erc20Tkn, S_ERC721Token erc721Tkn) public reinitializer(2) {
         __ERC721Holder_init();
         __UUPSUpgradeable_init();
         __Ownable_init(_msgSender());
-    erc20Token = erc20Tkn;
+        erc20Token = erc20Tkn;
         erc721Token = erc721Tkn;
+        rewardMultiplier = 1;
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
+
+    // New function for V2
+    function setRewardMultiplier(uint256 newMultiplier) external onlyOwner {
+        require(newMultiplier > 0, "Multiplier must be positive");
+        rewardMultiplier = newMultiplier;
+        emit RewardMultiplierUpdated(newMultiplier);
+    }
 
     function stakeNFT(uint256 tokenId) external {
         stakedNFTs[tokenId][msg.sender] = StakedNFT({
@@ -93,8 +104,10 @@ contract Staker is ERC721HolderUpgradeable, UUPSUpgradeable, OwnableUpgradeable 
         emit RewardClaimed(msg.sender, totalReward);
     }
 
-    function calculateReward(uint256 duration) internal pure returns (uint256) {
-        return (duration * 10 * 1e18) / 1 days;
+    // Updated for V2 to use multiplier
+    function calculateReward(uint256 duration) internal view returns (uint256) {
+        uint256 completeDays = duration / 1 days; // This will round down
+        return (completeDays * 10 * 1e18 * rewardMultiplier);
     }
 
     function onERC721Received(

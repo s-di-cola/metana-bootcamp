@@ -4,7 +4,7 @@ pragma solidity ^0.8.27;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ERC20Token is ERC20, Ownable {
+contract S_ERC20Token is ERC20, Ownable {
     address public staker;
     uint256 public constant INITIAL_SUPPLY = 1_000_000 * 10 ** 18;
     uint256 public constant EXCHANGE_RATE = 1e15; // 500 tokens per 0.5 ETH
