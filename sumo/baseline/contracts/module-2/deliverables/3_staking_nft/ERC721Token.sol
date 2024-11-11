@@ -1,1 +1,0 @@
-/Users/sdicola/WebstormProjects/metana/metana-bootcamp/module-2/deliverables/3_staking_nft/ERC721Token.sol

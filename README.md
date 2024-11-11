@@ -310,7 +310,7 @@ contract Gate2 {
 
 **Q: Should you be using pausable or nonReentrant in your NFT? Why or not?**
 
-A: No, because:
+A: Although pausable should be used to prevent exploits, nonReentrant is not necessary for NFTs because:
 
 1. Merkle tree verification requires valid proofs
 2. Commit-reveal pattern requires valid secrets
@@ -328,3 +328,11 @@ uint256 private constant ENTERED = 2;
 
 Since they are constants, they become part of the bytecode. This implies no storage slot is used, saving the expensive
 gas costs associated with SSTORE operations. Moreover, reading is very cheap, as it is just a bytecode lookup.
+
+### Module 9: Upgradable Contracts
+
+This module covers the concept of upgradable contracts and how to implement them using OpenZeppelin's Upgrades Plugins.
+The three contracts from module 2 are upgraded using both UUPS and Transparent proxy pattern (see test folder).
+
+Lastly, a simple ERC721 contract is deployed and upgraded to demonstrate the upgradability of contracts by adding a god mode feature.
+The proxy is deployed to holesky network at [0x247b1c3e3D1386adafbE7B94109D33307f64768C](https://holesky.etherscan.io/address/0x247b1c3e3D1386adafbE7B94109D33307f64768C).
