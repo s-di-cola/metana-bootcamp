@@ -3,8 +3,8 @@ import { expect } from "chai";
 
 describe("Metana OpenSea", () => {
   it("should upgrade max supply to 100", async () => {
-    const MetanaNFTV1 = await ethers.getContractFactory("MetanaOpensea");
-    const MetanaNFTV2 = await ethers.getContractFactory("MetanaOpenseaV2");
+    const MetanaNFTV1 = await ethers.getContractFactory("MetanaOpenSea");
+    const MetanaNFTV2 = await ethers.getContractFactory("MetanaOpenSeaV2");
 
     const instance = await upgrades.deployProxy(MetanaNFTV1, ["MetanaV1"]);
     const upgraded = await upgrades.upgradeProxy(
