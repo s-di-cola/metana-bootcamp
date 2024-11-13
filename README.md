@@ -336,3 +336,42 @@ The three contracts from module 2 are upgraded using both UUPS and Transparent p
 
 Lastly, a simple ERC721 contract is deployed and upgraded to demonstrate the upgradability of contracts by adding a god mode feature.
 The proxy is deployed to holesky network at [0x247b1c3e3D1386adafbE7B94109D33307f64768C](https://holesky.etherscan.io/address/0x247b1c3e3D1386adafbE7B94109D33307f64768C).
+
+
+### Module 10: YUL and Assembly
+
+This module covers the basics of YUL and Assembly in Solidity. The deliverables for this module is the implementation of
+the following contracts:
+
+```solidity
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.4;
+
+contract BitWise {
+    // count the number of bit set in data.  i.e. data = 7, result = 3
+    function countBitSet(uint8 data) public pure returns (uint8 result) {
+        for( uint i = 0; i < 8; i += 1) {
+            if( ((data >> i) & 1) == 1) {
+                result += 1;
+            }
+        }
+    }
+
+    function countBitSetAsm(uint8 data ) public pure returns (uint8 result) {
+        // replace following line with inline assembly code
+        result = countBitSet(data);
+    }
+}
+
+contract String {
+   function charAt(string memory input, uint index) public pure returns(bytes2) {
+        assembly{
+            // add logic here
+            // return the character from input at the given 
+            // index
+            // where index is base 0
+        }
+   }
+}
+```
