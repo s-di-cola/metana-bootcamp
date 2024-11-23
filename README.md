@@ -334,9 +334,10 @@ gas costs associated with SSTORE operations. Moreover, reading is very cheap, as
 This module covers the concept of upgradable contracts and how to implement them using OpenZeppelin's Upgrades Plugins.
 The three contracts from module 2 are upgraded using both UUPS and Transparent proxy pattern (see test folder).
 
-Lastly, a simple ERC721 contract is deployed and upgraded to demonstrate the upgradability of contracts by adding a god mode feature.
-The proxy is deployed to holesky network at [0x247b1c3e3D1386adafbE7B94109D33307f64768C](https://holesky.etherscan.io/address/0x247b1c3e3D1386adafbE7B94109D33307f64768C).
-
+Lastly, a simple ERC721 contract is deployed and upgraded to demonstrate the upgradability of contracts by adding a god
+mode feature.
+The proxy is deployed to holesky network
+at [0x247b1c3e3D1386adafbE7B94109D33307f64768C](https://holesky.etherscan.io/address/0x247b1c3e3D1386adafbE7B94109D33307f64768C).
 
 ### Module 10: YUL and Assembly
 
@@ -351,41 +352,50 @@ pragma solidity ^0.8.4;
 contract BitWise {
     // count the number of bit set in data.  i.e. data = 7, result = 3
     function countBitSet(uint8 data) public pure returns (uint8 result) {
-        for( uint i = 0; i < 8; i += 1) {
-            if( ((data >> i) & 1) == 1) {
+        for (uint i = 0; i < 8; i += 1) {
+            if (((data >> i) & 1) == 1) {
                 result += 1;
             }
         }
     }
 
-    function countBitSetAsm(uint8 data ) public pure returns (uint8 result) {
+    function countBitSetAsm(uint8 data) public pure returns (uint8 result) {
         // replace following line with inline assembly code
         result = countBitSet(data);
     }
 }
 
 contract String {
-   function charAt(string memory input, uint index) public pure returns(bytes2) {
+    function charAt(string memory input, uint index) public pure returns (bytes2) {
         assembly{
-            // add logic here
-            // return the character from input at the given 
-            // index
-            // where index is base 0
+        // add logic here
+        // return the character from input at the given 
+        // index
+        // where index is base 0
         }
-   }
+    }
 }
 ```
 
 ### Module 11: Transactions and MultSig Wallet
 
-This module covers the basics of transactions and Multisig Wallets. The deliverables for this assignment is to build a basic crypto wallet from scratch,
-without using any libraries or existing wallets. 
+This module covers the basics of transactions and Multisig Wallets. The deliverables for this assignment is to build a
+basic crypto wallet from scratch,
+without using any libraries or existing wallets.
 
-To run the wallet simply run the following command:
+To run the wallet you would need to provide the rename the `.env.example` file to `.env` and provide the following
+environment variables:
+
+```
+SECRET_ALCHEMY_API_KEY=your-api-key
+SECRET_ETHERSCAN_API_KEY=your-api-key
+```
+
+Then run the following command:
 
 ``` 
 npm run dev
 ```
 
-And navigate to the host address provided in the terminal.
+Finally, navigate to the host address provided in the terminal.
 
