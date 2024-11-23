@@ -60,7 +60,7 @@
     });
 
     onDestroy(() => {
-        if (priceInterval) clearInterval(priceInterval);
+        if (priceInterval) clearInterval(priceInterval.toString());
     });
 </script>
 
