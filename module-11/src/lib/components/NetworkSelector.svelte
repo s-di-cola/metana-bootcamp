@@ -11,7 +11,7 @@
 
     const handleNetworkChange = (event: Event) => {
         const select = event.target as HTMLSelectElement;
-        const newNetwork = $networkStore.networks.find(n => n.id === select.value);
+        const newNetwork = $networkStore.networks.find(network => network.id === select.value);
         if (newNetwork) {
             networkStore.update(store => ({
                 ...store,

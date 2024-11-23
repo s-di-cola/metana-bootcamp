@@ -6,33 +6,22 @@
     export let addressIndex: number;
     let showModal = false;
 
-    function deleteAddress() {
-        addressStore.update(store => {
-            const newAddresses = store.addresses.filter((_, index) => index !== addressIndex);
-            let newSelectedIndex = store.selectedIndex;
+  function deleteAddress() {
+    addressStore.update(store => {
+        const newAddresses = store.addresses.filter((_, index) => index !== addressIndex);
+        const newSelectedIndex = addressIndex < store.selectedIndex ? store.selectedIndex - 1 : Math.min(store.selectedIndex, newAddresses.length - 1);
 
-            if (addressIndex === store.selectedIndex) {
-                newSelectedIndex = Math.max(0, store.selectedIndex - 1);
-            } else if (addressIndex < store.selectedIndex) {
-                newSelectedIndex--;
-            }
+        return {
+            ...store,
+            addresses: newAddresses,
+            selectedIndex: newAddresses.length ? newSelectedIndex : 0
+        };
+    });
 
-            if (newAddresses.length === 0) {
-                newSelectedIndex = 0;
-            }
-
-            return {
-                ...store,
-                addresses: newAddresses,
-                selectedIndex: newSelectedIndex
-            };
-        });
-
-        showModal = false;
-    }
+    showModal = false;
+}
 </script>
 
-<!-- Styled to match your UI -->
 <button
         class="inline-flex items-center justify-center w-6 h-6 rounded-md hover:bg-gray-100 transition-colors duration-200"
         on:click={() => showModal = true}
