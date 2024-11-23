@@ -375,3 +375,17 @@ contract String {
    }
 }
 ```
+
+### Module 11: Transactions and MultSig Wallet
+
+This module covers the basics of transactions and Multisig Wallets. The deliverables for this assignment is to build a basic crypto wallet from scratch,
+without using any libraries or existing wallets. 
+
+To run the wallet simply run the following command:
+
+``` 
+npm run dev
+```
+
+And navigate to the host address provided in the terminal.
+

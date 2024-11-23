@@ -42,7 +42,6 @@
 		"@types/qrcode": "^1.5.5",
 		"elliptic": "^6.6.1",
 		"ethereum-cryptography": "^3.0.0",
-		"ethers": "^6.13.4",
 		"lucide-svelte": "^0.460.1",
 		"qrcode": "^1.5.4"
 	},
