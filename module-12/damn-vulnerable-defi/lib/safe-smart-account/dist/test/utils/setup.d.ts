@@ -1,0 +1,25 @@
+import { Contract } from "ethers";
+export declare const defaultTokenCallbackHandlerDeployment: () => Promise<any>;
+export declare const defaultTokenCallbackHandlerContract: () => Promise<any>;
+export declare const compatFallbackHandlerDeployment: () => Promise<any>;
+export declare const compatFallbackHandlerContract: () => Promise<any>;
+export declare const getSafeSingleton: () => Promise<any>;
+export declare const getSafeSingletonContract: () => Promise<any>;
+export declare const getFactoryContract: () => Promise<any>;
+export declare const getFactory: () => Promise<any>;
+export declare const getSimulateTxAccessor: () => Promise<any>;
+export declare const getMultiSend: () => Promise<any>;
+export declare const getMultiSendCallOnly: () => Promise<any>;
+export declare const getCreateCall: () => Promise<any>;
+export declare const migrationContract: () => Promise<any>;
+export declare const getMock: () => Promise<any>;
+export declare const getSafeTemplate: (saltNumber?: string) => Promise<any>;
+export declare const getSafeWithOwners: (owners: string[], threshold?: number, fallbackHandler?: string, logGasUsage?: boolean, saltNumber?: string) => Promise<any>;
+export declare const getTokenCallbackHandler: () => Promise<any>;
+export declare const getCompatFallbackHandler: () => Promise<any>;
+export declare const getSafeProxyRuntimeCode: () => Promise<any>;
+export declare const compile: (source: string) => Promise<{
+    data: string;
+    interface: any;
+}>;
+export declare const deployContract: (deployer: Wallet, source: string) => Promise<Contract>;
