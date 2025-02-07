@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("@nomicfoundation/hardhat-toolbox-viem");
+require("dotenv/config");
 const config = {
     solidity: {
         compilers: [
@@ -15,8 +16,8 @@ const config = {
     networks: {
         hardhat: {
             forking: {
-                url: "https://eth-mainnet.alchemyapi.io/v2/your-api-key",
-                blockNumber: 13000000
+                url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+                blockNumber: 19000000
             }
         }
     },

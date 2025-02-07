@@ -6,6 +6,7 @@ pragma experimental ABIEncoderV2;
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol";
 
 /**
  * @title LimitOrderContract
@@ -46,16 +47,7 @@ contract LimitOrder is AccessControl {
 
     constructor(ISwapRouter _swapRouter) {
         swapRouter = _swapRouter;
-        grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        grantRole(EXECUTOR_ROLE, msg.sender);
-    }
-
-    modifier onlyExecutor() {
-        require(
-            hasRole(EXECUTOR_ROLE, msg.sender),
-            "Caller is not an executor"
-        );
-        _;
+        _grantRole(EXECUTOR_ROLE, msg.sender);
     }
 
     /**
@@ -106,75 +98,46 @@ contract LimitOrder is AccessControl {
      *
      * emit OrderExecuted event
      */
-    function executeOrder(uint _orderID) external onlyExecutor {
+    function executeOrder(uint _orderID) external onlyRole(EXECUTOR_ROLE) {
         require(_orderID < s_orders.length, "Order does not exist");
         require(
             s_orders[_orderID].maker != msg.sender,
             "Maker cannot execute their own order"
         );
-        require(
-            s_orders[_orderID].executed == false,
-            "Order has already been executed"
-        );
-        require(
-            s_orders[_orderID].expiry > block.timestamp,
-            "Order has expired"
-        );
+        require(s_orders[_orderID].executed == false, "Order has already been executed");
+        require(s_orders[_orderID].expiry > block.timestamp, "Order has expired");
+
         s_orders[_orderID].state = OrderState.EXECUTED;
         s_orders[_orderID].executed = true;
-        if (s_orders[_orderID].orderType == OrderType.BUY) {
-            TransferHelper.safeTransferFrom(
-                s_orders[_orderID].tokenIn,
-                s_orders[_orderID].maker,
-                address(this),
-                s_orders[_orderID].amount
-            );
-            TransferHelper.safeApprove(
-                s_orders[_orderID].tokenIn,
-                address(swapRouter),
-                s_orders[_orderID].amount
-            );
-            ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
-                .ExactInputSingleParams({
-                    tokenIn: s_orders[_orderID].tokenIn,
-                    tokenOut: s_orders[_orderID].tokenOut,
-                    fee: s_orders[_orderID].fee,
-                    recipient: s_orders[_orderID].maker,
-                    deadline: block.timestamp + 60,
-                    amountIn: s_orders[_orderID].amount,
-                    amountOutMinimum: s_orders[_orderID].amount /
-                        s_orders[_orderID].targetPrice,
-                    sqrtPriceLimitX96: 0
-                });
-            swapRouter.exactInputSingle(params);
-            emit OrderExecuted(_orderID, s_orders[_orderID]);
-        } else {
-            TransferHelper.safeTransferFrom(
-                s_orders[_orderID].tokenIn,
-                s_orders[_orderID].maker,
-                address(this),
-                s_orders[_orderID].amount
-            );
-            TransferHelper.safeApprove(
-                s_orders[_orderID].tokenIn,
-                address(swapRouter),
-                s_orders[_orderID].amount
-            );
-            ISwapRouter.ExactOutputSingleParams memory params = ISwapRouter
-                .ExactOutputSingleParams({
-                    tokenIn: s_orders[_orderID].tokenIn,
-                    tokenOut: s_orders[_orderID].tokenOut,
-                    fee: s_orders[_orderID].fee,
-                    recipient: s_orders[_orderID].maker,
-                    deadline: block.timestamp + 60,
-                    amountOut: s_orders[_orderID].amount,
-                    amountInMaximum: s_orders[_orderID].amount *
-                        s_orders[_orderID].targetPrice,
-                    sqrtPriceLimitX96: 0
-                });
-            swapRouter.exactOutputSingle(params);
-            emit OrderExecuted(_orderID, s_orders[_orderID]);
-        }
+
+        TransferHelper.safeTransferFrom(
+            s_orders[_orderID].tokenIn,
+            s_orders[_orderID].maker,
+            address(this),
+            s_orders[_orderID].amount
+        );
+        TransferHelper.safeApprove(
+            s_orders[_orderID].tokenIn,
+            address(swapRouter),
+            s_orders[_orderID].amount
+        );
+
+        uint256 minOut = s_orders[_orderID].orderType == OrderType.BUY ?
+            s_orders[_orderID].amount / s_orders[_orderID].targetPrice :
+            s_orders[_orderID].amount * s_orders[_orderID].targetPrice / 1e18;
+
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
+            tokenIn: s_orders[_orderID].tokenIn,
+            tokenOut: s_orders[_orderID].tokenOut,
+            fee: s_orders[_orderID].fee,
+            recipient: s_orders[_orderID].maker,
+            deadline: block.timestamp + 60,
+            amountIn: s_orders[_orderID].amount,
+            amountOutMinimum: minOut,
+            sqrtPriceLimitX96: 0
+        });
+        swapRouter.exactInputSingle(params);
+        emit OrderExecuted(_orderID, s_orders[_orderID]);
     }
 
     function cancelOrder(uint _orderID) external {
