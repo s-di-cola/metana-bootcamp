@@ -45,9 +45,19 @@ contract LimitOrder is AccessControl {
     ISwapRouter public immutable swapRouter;
     bytes32 public constant EXECUTOR_ROLE = keccak256("EXECUTOR_ROLE");
 
-    constructor(ISwapRouter _swapRouter) {
+    constructor(ISwapRouter _swapRouter, address admin, address executor) {
         swapRouter = _swapRouter;
-        _grantRole(EXECUTOR_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(EXECUTOR_ROLE, executor);
+    }
+
+
+    /**
+     * @dev Get the number of orders that have been placed
+     * @return orders The number of orders that have been placed
+     */
+    function getOrders() external view returns (uint256 orders) {
+        orders = s_orders.length;
     }
 
     /**
