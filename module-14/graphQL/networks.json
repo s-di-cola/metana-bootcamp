@@ -2,7 +2,7 @@
   "mainnet": {
     "LimitOrder": {
       "address": "0x50cE9f01972dB1Ed5745ADb0Ae3fF4F4e82fB5D6",
-      "startBlock": 0
+      "startBlock": 21802282
     }
   }
 }
