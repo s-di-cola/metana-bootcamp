@@ -1,10 +1,15 @@
 import hre from 'hardhat';
 import {Address, parseEther} from 'viem';
-import {expect} from 'chai';
+import chai, {expect} from 'chai';
 import {parseEventLogs} from 'viem';
+import chaiAsPromised from 'chai-as-promised';
+
+chai.use(chaiAsPromised);
 
 const ADDRESSES = {
     UNISWAP_V3_ROUTER: '0xE592427A0AEce92De3Edee1F18E0157C05861564',
+    ADMIN: '0x88055326795DD479B39335CAb1c48357A66a6a6F',
+    EXECUTOR: '0x3Fd2FbfcFA051455A34fcd931cb53772E370C0B0',
     USDC: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     WETH: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 } as const;
@@ -43,12 +48,19 @@ async function createOrder(userAddress: string, orderType: number = ORDER_TYPES.
     };
 }
 
+async function impersonateAddress(address: string) {
+    const testClient = await hre.viem.getTestClient();
+    await testClient.impersonateAccount({address});
+    await testClient.setBalance({ address, value: parseEther('10') });
+    return testClient;
+}
+
 describe('LimitOrder', () => {
     let limitOrder: any, weth: any, usdc: any, owner: any, user: any, order: Order;
 
     beforeEach(async () => {
         [owner, user] = await hre.viem.getWalletClients();
-        limitOrder = await hre.viem.deployContract('LimitOrder', [ADDRESSES.UNISWAP_V3_ROUTER], {
+        limitOrder = await hre.viem.deployContract('LimitOrder', [ADDRESSES.UNISWAP_V3_ROUTER, ADDRESSES.ADMIN, ADDRESSES.EXECUTOR], {
             client: {wallet: owner}
         });
         weth = await hre.viem.getContractAt('IWETH', ADDRESSES.WETH);
@@ -60,7 +72,15 @@ describe('LimitOrder', () => {
         describe('Valid Orders', () => {
             it('accepts BUY orders with WETH/USDC pair', async () => {
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 const receipt = await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
                 const event = parseEventLogs({
@@ -71,22 +91,29 @@ describe('LimitOrder', () => {
                 expect(event[0].args.orderID).to.equal(0n);
 
                 const storedOrder = await limitOrder.read.s_orders([0n]);
-                expect(storedOrder[0]).to.equal(ORDER_TYPES.BUY);
-                expect(storedOrder[5]).to.equal(parseEther('1'));
-                expect(storedOrder[6]).to.equal(BigInt(1800 * 1e6));
+                expect(storedOrder[1]).to.equal(ORDER_TYPES.BUY);
+                expect(storedOrder[7]).to.equal(parseEther('1'));
+                expect(storedOrder[8]).to.equal(BigInt(1800 * 1e6));
             });
 
             it('accepts SELL orders with USDC/WETH pair', async () => {
                 order = await createOrder(user.account.address, ORDER_TYPES.SELL);
                 await usdc.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
                 const storedOrder = await limitOrder.read.s_orders([0n]);
-                expect(storedOrder[0]).to.equal(ORDER_TYPES.SELL);
-                expect(storedOrder[5]).to.equal(BigInt(1800 * 1e6));
-                expect(storedOrder[6]).to.equal(parseEther('1'));
+                expect(storedOrder[1]).to.equal(ORDER_TYPES.SELL);
+                expect(storedOrder[7]).to.equal(BigInt(1800 * 1e6));
+                expect(storedOrder[8]).to.equal(parseEther('1'));
             });
         });
 
@@ -94,42 +121,84 @@ describe('LimitOrder', () => {
             it('rejects expired orders', async () => {
                 const block = await (await hre.viem.getPublicClient()).getBlock();
                 order.expiry = block.timestamp - 3600n;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('Invalid expiry since it is in the past');
+                })).to.eventually.be.rejectedWith('Invalid expiry');
             });
 
             it('rejects zero amount', async () => {
                 order.amount = 0n;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('Amount must be greater than 0');
+                })).to.eventually.be.rejectedWith('Amount must be greater than 0');
             });
 
             it('rejects zero target price', async () => {
                 order.targetPrice = 0n;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('Target price must be greater than 0');
+                })).to.eventually.be.rejectedWith('Target price must be greater than 0');
             });
 
             it('rejects invalid fees', async () => {
                 order.fee = 0;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('Fee must be greater than 0');
+                })).to.eventually.be.rejectedWith('Invalid fee');
 
                 order.fee = 10000;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('Fee must be less than 10000');
+                })).to.eventually.be.rejectedWith('Invalid fee');
             });
 
             it('rejects identical input/output tokens', async () => {
                 order.tokenOut = order.tokenIn;
-                await expect(limitOrder.write.placeOrder([order], {
+                await expect(limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {
                     account: user.account
-                })).to.be.rejectedWith('TokenIn and TokenOut must be different');
+                })).to.eventually.be.rejectedWith('Invalid tokens');
             });
         });
     });
@@ -140,20 +209,25 @@ describe('LimitOrder', () => {
                 await weth.write.deposit({account: user.account, value: order.amount});
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
-                await limitOrder.write.executeOrder([0n], {account: owner.account});
+                await impersonateAddress(ADDRESSES.EXECUTOR);
+                await limitOrder.write.executeOrder([0n], {account: ADDRESSES.EXECUTOR});
 
                 const storedOrder = await limitOrder.read.s_orders([0n]);
-                expect(storedOrder[1]).to.equal(ORDER_STATES.EXECUTED);
+                expect(storedOrder[2]).to.equal(ORDER_STATES.EXECUTED);
             });
 
             it('executes SELL orders', async () => {
-                const testClient = await hre.viem.getTestClient();
-                await testClient.impersonateAccount({address: WETH_WHALE});
-                await testClient.setBalance({address: WETH_WHALE, value: parseEther('10')});
-
+                await impersonateAddress(WETH_WHALE);
                 await weth.write.transfer([user.account.address, parseEther('10')], {account: WETH_WHALE});
                 await weth.write.approve([limitOrder.address, parseEther('10')], {account: user.account});
 
@@ -165,48 +239,72 @@ describe('LimitOrder', () => {
                     tokenOut: ADDRESSES.USDC,
                 }
 
-                const tx = await limitOrder.write.placeOrder([sellOrder], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
-                await limitOrder.write.executeOrder([0n], {account: owner.account});
+                await impersonateAddress(ADDRESSES.EXECUTOR);
+                await limitOrder.write.executeOrder([0n], {account: ADDRESSES.EXECUTOR});
 
                 const storedOrder = await limitOrder.read.s_orders([0n]);
-                expect(storedOrder[1]).to.equal(ORDER_STATES.EXECUTED);
+                expect(storedOrder[2]).to.equal(ORDER_STATES.EXECUTED);
             });
         });
 
         describe('Invalid Execution', () => {
             it('rejects non-existent orders', async () => {
+                await impersonateAddress(ADDRESSES.EXECUTOR);
                 await expect(limitOrder.write.executeOrder([0n], {
-                    account: owner.account
-                })).to.be.rejectedWith('Order does not exist');
+                    account: ADDRESSES.EXECUTOR
+                })).to.eventually.be.rejectedWith('Order does not exist');
             });
 
             it('enforces executor role', async () => {
                 await weth.write.deposit({account: user.account, value: order.amount});
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
                 await expect(limitOrder.write.executeOrder([0n], {
                     account: user.account
-                })).to.be.rejectedWith('AccessControlUnauthorizedAccount');
+                })).to.eventually.be.rejectedWith('AccessControlUnauthorizedAccount');
             });
 
             it('rejects expired orders', async () => {
                 await weth.write.deposit({account: user.account, value: order.amount});
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
-                await hre.network.provider.send('evm_increaseTime', [3601]);
-                await hre.network.provider.send('evm_mine');
+                const testClient = await hre.viem.getTestClient();
+                await testClient.increaseTime({seconds: 3601});
 
+                await impersonateAddress(ADDRESSES.EXECUTOR);
                 await expect(limitOrder.write.executeOrder([0n], {
-                    account: owner.account
-                })).to.be.rejectedWith('Order has expired');
+                    account: ADDRESSES.EXECUTOR
+                })).to.eventually.be.rejectedWith('Expired');
             });
         });
     });
@@ -216,7 +314,14 @@ describe('LimitOrder', () => {
             it('cancels open orders', async () => {
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const placeTx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const placeTx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 const placeReceipt = await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: placeTx});
 
                 const orderEvent = parseEventLogs({
@@ -237,7 +342,7 @@ describe('LimitOrder', () => {
                 expect(cancelEvent[0].args.orderID).to.equal(orderId);
 
                 const storedOrder = await limitOrder.read.s_orders([orderId]);
-                expect(storedOrder[1]).to.equal(ORDER_STATES.CANCELLED);
+                expect(storedOrder[2]).to.equal(ORDER_STATES.CANCELLED);
             });
         });
 
@@ -250,14 +355,22 @@ describe('LimitOrder', () => {
                 await weth.write.deposit({account: user.account, value: order.amount});
                 await weth.write.approve([limitOrder.address, order.amount], {account: user.account});
 
-                const tx = await limitOrder.write.placeOrder([order], {account: user.account});
+                const tx = await limitOrder.write.placeOrder([
+                    order.orderType,
+                    order.tokenIn,
+                    order.tokenOut,
+                    order.amount,
+                    order.targetPrice,
+                    order.expiry,
+                    order.fee], {account: user.account});
                 await (await hre.viem.getPublicClient()).waitForTransactionReceipt({hash: tx});
 
-                await limitOrder.write.executeOrder([0n], {account: owner.account});
+                await impersonateAddress(ADDRESSES.EXECUTOR);
+                await limitOrder.write.executeOrder([0n], {account: ADDRESSES.EXECUTOR});
 
                 await expect(limitOrder.write.cancelOrder([0n], {
                     account: user.account
-                })).to.be.rejectedWith('Order has already been executed');
+                })).to.eventually.be.rejectedWith('Already executed');
             });
         });
     });

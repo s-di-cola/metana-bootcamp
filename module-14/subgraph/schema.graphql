@@ -1,0 +1,16 @@
+type Order @entity {
+  id: ID!
+  orderID: BigInt!
+  maker: Bytes!
+  tokenIn: Bytes!
+  tokenOut: Bytes!
+  amount: BigInt!
+  targetPrice: BigInt!
+  state: String!
+  timestamp: BigInt!
+  expiry: BigInt!
+  transactionHash: Bytes!
+  executedTransactionHash: Bytes
+  executedAt: BigInt
+  cancelledAt: BigInt
+}

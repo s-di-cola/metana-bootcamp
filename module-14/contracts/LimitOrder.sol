@@ -1,7 +1,5 @@
-// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.7.6 <0.9.0;
-// enable ABIEncoderV2 to allow structs to be passed as arguments
-pragma experimental ABIEncoderV2;
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
@@ -13,33 +11,36 @@ import "@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules
  * @dev Contract for placing limit orders on Uniswap v3
  */
 contract LimitOrder is AccessControl {
-    enum OrderType {
-        BUY,
-        SELL
-    }
-
-    enum OrderState {
-        PLACED,
-        EXECUTED,
-        CANCELLED
-    }
+    enum OrderType { BUY, SELL }
+    enum OrderState { PLACED, EXECUTED, CANCELLED }
 
     struct Order {
+        uint16 fee;
         OrderType orderType;
         OrderState state;
+        bool executed;
+
         address maker;
         address tokenIn;
         address tokenOut;
         uint256 amount;
         uint256 targetPrice;
+        uint256 timestamp;
         uint256 expiry;
-        uint16 fee;
-        bool executed;
+        bytes32 transactionHash;  // hash of the latest transaction for the order
     }
 
-    event OrderPlaced(uint indexed orderID, Order indexed order);
-    event OrderExecuted(uint indexed orderID, Order indexed order);
-    event OrderCancelled(uint indexed orderID, Order indexed order);
+    event OrderPlaced(
+        uint indexed orderID,
+        address indexed maker,
+        address tokenIn,
+        address tokenOut,
+        uint256 amount,
+        uint256 targetPrice,
+        uint256 expiry
+    );
+    event OrderExecuted(uint indexed orderID, bytes32 transactionHash);
+    event OrderCancelled(uint indexed orderID);
 
     Order[] public s_orders;
     ISwapRouter public immutable swapRouter;
@@ -51,118 +52,106 @@ contract LimitOrder is AccessControl {
         _grantRole(EXECUTOR_ROLE, executor);
     }
 
-
-    /**
-     * @dev Get the number of orders that have been placed
-     * @return orders The number of orders that have been placed
-     */
     function getOrders() external view returns (uint256 orders) {
-        orders = s_orders.length;
+        return s_orders.length;
     }
 
-    /**
-     * @dev Place an order to buy or sell a token at a specific price
-     * @param _order Order struct containing the order details
-     * @return orderID The ID of the order that was placed
-     *
-     * require Expiry is in the future
-     * require Amount is greater than 0
-     * require Target price is greater than 0
-     * require Fee is greater than 0
-     * require Fee is less than 10000
-     * require TokenIn and TokenOut are different
-     *
-     *
-     *  emit OrderPlaced event
-     */
-    function placeOrder(Order memory _order) external returns (uint orderID) {
-        require(
-            _order.expiry > block.timestamp,
-            "Invalid expiry since it is in the past"
-        );
-        require(_order.amount > 0, "Amount must be greater than 0");
-        require(_order.targetPrice > 0, "Target price must be greater than 0");
-        require(_order.fee > 0, "Fee must be greater than 0");
-        require(_order.fee < 10000, "Fee must be less than 10000");
-        require(
-            _order.tokenIn != _order.tokenOut,
-            "TokenIn and TokenOut must be different"
-        );
+    function placeOrder(
+        OrderType orderType,
+        address tokenIn,
+        address tokenOut,
+        uint256 amount,
+        uint256 targetPrice,
+        uint256 expiry,
+        uint16 fee
+    ) external returns (uint orderID) {
+        require(expiry > block.timestamp, "Invalid expiry");
+        require(amount > 0, "Amount must be greater than 0");
+        require(targetPrice > 0, "Target price must be greater than 0");
+        require(fee > 0 && fee < 10000, "Invalid fee");
+        require(tokenIn != tokenOut, "Invalid tokens");
 
-        _order.executed = false;
-        _order.maker = msg.sender;
-        _order.state = OrderState.PLACED;
-        s_orders.push(_order);
+        Order memory newOrder = Order({
+            orderType: orderType,
+            state: OrderState.PLACED,
+            maker: msg.sender,
+            tokenIn: tokenIn,
+            tokenOut: tokenOut,
+            amount: amount,
+            targetPrice: targetPrice,
+            expiry: expiry,
+            fee: fee,
+            executed: false,
+            timestamp: block.timestamp,
+            transactionHash: bytes32(0)
+        });
+
+        s_orders.push(newOrder);
         uint id = s_orders.length - 1;
-        emit OrderPlaced(id, _order);
+
+        emit OrderPlaced(
+            id,
+            msg.sender,
+            tokenIn,
+            tokenOut,
+            amount,
+            targetPrice,
+            expiry
+        );
         return id;
     }
 
-    /**
-     * @dev Execute an order that has been placed
-     * @param _orderID The ID of the order to execute
-     *
-     * require Maker cannot execute their own order
-     * require Order has not already been executed
-     * require Order has not expired
-     *
-     * emit OrderExecuted event
-     */
     function executeOrder(uint _orderID) external onlyRole(EXECUTOR_ROLE) {
         require(_orderID < s_orders.length, "Order does not exist");
-        require(
-            s_orders[_orderID].maker != msg.sender,
-            "Maker cannot execute their own order"
-        );
-        require(s_orders[_orderID].executed == false, "Order has already been executed");
-        require(s_orders[_orderID].expiry > block.timestamp, "Order has expired");
+        require(s_orders[_orderID].maker != msg.sender, "Invalid executor");
+        require(!s_orders[_orderID].executed, "Already executed");
+        require(s_orders[_orderID].expiry > block.timestamp, "Expired");
 
-        s_orders[_orderID].state = OrderState.EXECUTED;
-        s_orders[_orderID].executed = true;
+        Order storage order = s_orders[_orderID];
+        order.state = OrderState.EXECUTED;
+        order.executed = true;
 
         TransferHelper.safeTransferFrom(
-            s_orders[_orderID].tokenIn,
-            s_orders[_orderID].maker,
+            order.tokenIn,
+            order.maker,
             address(this),
-            s_orders[_orderID].amount
+            order.amount
         );
         TransferHelper.safeApprove(
-            s_orders[_orderID].tokenIn,
+            order.tokenIn,
             address(swapRouter),
-            s_orders[_orderID].amount
+            order.amount
         );
 
-        uint256 minOut = s_orders[_orderID].orderType == OrderType.BUY ?
-            s_orders[_orderID].amount / s_orders[_orderID].targetPrice :
-            s_orders[_orderID].amount * s_orders[_orderID].targetPrice / 1e18;
+        uint256 minOut = order.orderType == OrderType.BUY ?
+            order.amount / order.targetPrice :
+            order.amount * order.targetPrice / 1e18;
 
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
-            tokenIn: s_orders[_orderID].tokenIn,
-            tokenOut: s_orders[_orderID].tokenOut,
-            fee: s_orders[_orderID].fee,
-            recipient: s_orders[_orderID].maker,
+            tokenIn: order.tokenIn,
+            tokenOut: order.tokenOut,
+            fee: order.fee,
+            recipient: order.maker,
             deadline: block.timestamp + 60,
-            amountIn: s_orders[_orderID].amount,
+            amountIn: order.amount,
             amountOutMinimum: minOut,
             sqrtPriceLimitX96: 0
         });
+
         swapRouter.exactInputSingle(params);
-        emit OrderExecuted(_orderID, s_orders[_orderID]);
+        order.transactionHash = blockhash(block.number - 1);
+
+        emit OrderExecuted(_orderID, order.transactionHash);
     }
 
     function cancelOrder(uint _orderID) external {
         require(_orderID < s_orders.length, "Order does not exist");
-        require(
-            s_orders[_orderID].maker == msg.sender,
-            "Only the maker can cancel the order"
-        );
-        require(
-            s_orders[_orderID].executed == false,
-            "Order has already been executed"
-        );
+        require(s_orders[_orderID].maker == msg.sender, "Not order maker");
+        require(!s_orders[_orderID].executed, "Already executed");
 
         s_orders[_orderID].state = OrderState.CANCELLED;
         s_orders[_orderID].executed = true;
-        emit OrderCancelled(_orderID, s_orders[_orderID]);
+
+        emit OrderCancelled(_orderID);
     }
 }

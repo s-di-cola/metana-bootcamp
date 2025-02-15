@@ -1,11 +1,12 @@
-import 'dotenv/config';
+import {config} from "dotenv";
+config({path: '../.env'});
 import {Defender} from "@openzeppelin/defender-sdk";
 import hre from "hardhat";
 
 async function deployLimitOrderContract() {
     const UNISWAP_ROUTER = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
-    const EXECUTOR_RELAYER="0xf3AaEc82876e0619Ae49b9788ccc20dF9EA1D064"
-    const EOA="0x88055326795DD479B39335CAb1c48357A66a6a6F"
+    const EXECUTOR="0x7AfB1c93d64766B3b367aB7501c60215C224e8dE"
+    const ADMIN="0x88055326795DD479B39335CAb1c48357A66a6a6F"
 
     const client = new Defender({
         apiKey: process.env.OPENZEPPELIN_DEFENDER_API_KEY,
@@ -17,9 +18,9 @@ async function deployLimitOrderContract() {
     const deployment = await client.deploy.deployContract({
         contractName: "LimitOrder",
         contractPath: "contracts/LimitOrder.sol",
-        network: "buildbear-nasty-northstar",
+        network: "mainent-fork-tenderly",
         verifySourceCode: true,
-        constructorInputs: [UNISWAP_ROUTER,EOA,EXECUTOR_RELAYER],
+        constructorInputs: [UNISWAP_ROUTER,ADMIN,EXECUTOR],
         artifactPayload: JSON.stringify(artifactPayload),
         salt: 'limit-order-salt'
     });

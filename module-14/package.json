@@ -2,19 +2,25 @@
   "name": "hardhat-project",
   "scripts": {
     "compile": "hardhat compile",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "deploy:virtual-mainnet": "TENDERLY_AUTOMATIC_VERIFICATION=true hardhat ignition deploy ignition/modules/LimitOrder.ts --network virtual_mainnet --deployment-id limit-order"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "@tenderly/hardhat-tenderly": "^2.5.2",
+    "@types/sinon": "^17.0.3",
     "dotenv": "^16.4.7",
     "hardhat": "^2.22.18",
     "tsx": "^4.19.2"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.2.0",
-    "@openzeppelin/defender-sdk": "^2.1.0",
+    "@openzeppelin/defender-sdk": "^2.2.0",
     "@openzeppelin/defender-sdk-deploy-client": "^2.1.0",
     "@uniswap/v3-core": "1.0.1",
-    "@uniswap/v3-periphery": "1.4.4"
+    "@uniswap/v3-periphery": "1.4.4",
+    "chai-as-promised": "^8.0.1",
+    "ethers": "^5.7.2",
+    "sinon": "^19.0.2"
   }
 }

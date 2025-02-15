@@ -1,0 +1,35 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: LimitOrder
+    network: mainnet
+    source:
+      address: "0xeAA1934Dff38Dad950831f4b3b0c7d1A449f2720"
+      abi: LimitOrder
+      startBlock: 21845927
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OrderCancelled
+        - OrderExecuted
+        - OrderPlaced
+        - RoleAdminChanged
+        - RoleGranted
+        - RoleRevoked
+      abis:
+        - name: LimitOrder
+          file: ./abis/LimitOrder.json
+      eventHandlers:
+        - event: OrderCancelled(indexed uint256)
+          handler: handleOrderCancelled
+        - event: OrderExecuted(indexed uint256,bytes32)
+          handler: handleOrderExecuted
+        - event:  OrderPlaced(indexed uint256,indexed address,address,address,uint256,uint256,uint256)
+          handler: handleOrderPlaced
+      file: ./src/limit-order.ts
