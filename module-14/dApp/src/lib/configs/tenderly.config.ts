@@ -1,33 +1,28 @@
 import { type Address, defineChain } from 'viem';
-import limitOrderAbi from "$lib/contract/abis/LimitOrder.json";
+import limitOrderAbi from '$lib/contract/abis/LimitOrder.json';
 
 export const virtual_mainnet = defineChain({
-  id: 1,
-  name: 'Virtual Mainnet',
-  nativeCurrency: {
-    name: 'VETH',
-    symbol: 'VETH',
-    decimals: 18
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://virtual.mainnet.rpc.tenderly.co/5a63e6ed-9e7a-448e-bd49-1fcf1bbe2f22']
-    }
-  },
-  blockExplorers: {
-    default: {
-      name: 'Tenderly Explorer',
-      url: 'https://dashboard.tenderly.co/sdicola/project/testnet/d963b8e2-ba38-48d8-91cb-bf8c02d77345'
-    }
-  },
-  network: 'mainnet',
-  // Required for defineChain
-  contracts: {},
-  testnet: false,
-  sourceId: 1
+	id: 9898998,
+	name: 'Tenderly Virtual Mainnet',
+	nativeCurrency: {
+		name: 'VETH',
+		symbol: 'VETH',
+		decimals: 18
+	},
+	rpcUrls: {
+		default: {
+			http: ['https://virtual.mainnet.rpc.tenderly.co/a65bcf13-d6f5-48a4-ae02-128b471ff0d8']
+		}
+	},
+	blockExplorers: {
+		default: {
+			name: 'Tenderly Explorer',
+			url: 'https://dashboard.tenderly.co/sdicola/project/testnet/65d7fc5c-e361-4775-9e21-28378f4271e5'
+		}
+	}
 });
 
 export const contract = {
-  address: '0xeaa1934dff38dad950831f4b3b0c7d1a449f2720' as Address,
-  abi: limitOrderAbi.abi
+	address: '0xf65a0930ac58e0640d46b60a038dd8406512834c' as Address,
+	abi: limitOrderAbi.abi
 };

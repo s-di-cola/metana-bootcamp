@@ -51,7 +51,7 @@
 	}
 
 	function getExplorerLink(hash: string): string {
-		return `${virtual_mainnet.blockExplorers.default.url}/tx/${hash}`;
+		return `${virtual_mainnet.blockExplorers.default.url}/tx/mainnet/${hash}`;
 	}
 
 	async function handleCancel() {
@@ -139,7 +139,7 @@
 		<div>
 			<Label class="mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Limit Price</Label>
 			<P weight="medium">
-				${formatTokenAmount(order.targetPrice, 18)} USDC
+				${formatTokenAmount(order.targetPrice, 8)} USDC
 			</P>
 		</div>
 		<div>

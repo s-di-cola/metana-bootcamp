@@ -9,7 +9,7 @@ const defender_sdk_1 = require("@openzeppelin/defender-sdk");
 const hardhat_1 = __importDefault(require("hardhat"));
 async function deployLimitOrderContract() {
     const UNISWAP_ROUTER = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
-    const EXECUTOR = "0x7AfB1c93d64766B3b367aB7501c60215C224e8dE";
+    const EXECUTOR = "0xede1ee98Ad6d35C30368Ff7711e7511592542100";
     const ADMIN = "0x88055326795DD479B39335CAb1c48357A66a6a6F";
     const client = new defender_sdk_1.Defender({
         apiKey: process.env.OPENZEPPELIN_DEFENDER_API_KEY,
