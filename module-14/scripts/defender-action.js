@@ -1,27 +1,26 @@
-// limitOrderChecker.js
-const {Defender} = require('@openzeppelin/defender-sdk');
+// defender-action.js
+const { Defender } = require('@openzeppelin/defender-sdk');
 const ethers = require('ethers');
 
-const LIMIT_ORDER_ADDRESS = '0xf65A0930AC58e0640d46B60a038dD8406512834c';
-const FEED_REGISTRY = "0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf";
-const USD = "0x0000000000000000000000000000000000000348";
-const ETH = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
-const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-const RELAYER_ADDRESS = "0x7afb1c93d64766b3b367ab7501c60215c224e8de";
+const LIMIT_ORDER_ADDRESS = '0xf65a0930ac58e0640d46b60a038dd8406512834c';
+const FEED_REGISTRY = '0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf';
+const USD = '0x0000000000000000000000000000000000000348';
+const ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
 
 const feedRegistryAbi = [
     {
         inputs: [
-            {internalType: "address", name: "base", type: "address"},
-            {internalType: "address", name: "quote", type: "address"}
+            { internalType: 'address', name: 'base', type: 'address' },
+            { internalType: 'address', name: 'quote', type: 'address' }
         ],
-        name: "latestRoundData",
+        name: 'latestRoundData',
         outputs: [
-            {name: 'roundId', type: 'uint80'},
-            {name: 'answer', type: 'int256'},
-            {name: 'startedAt', type: 'uint256'},
-            {name: 'updatedAt', type: 'uint256'},
-            {name: 'answeredInRound', type: 'uint80'}
+            { name: 'roundId', type: 'uint80' },
+            { name: 'answer', type: 'int256' },
+            { name: 'startedAt', type: 'uint256' },
+            { name: 'updatedAt', type: 'uint256' },
+            { name: 'answeredInRound', type: 'uint80' }
         ],
         stateMutability: 'view',
         type: 'function'
@@ -30,110 +29,44 @@ const feedRegistryAbi = [
 
 const limitOrderAbi = [
     {
-        "inputs": [],
-        "name": "getOrders",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "orders",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
+        inputs: [],
+        name: 'getOrders',
+        outputs: [{ internalType: 'uint256', name: 'orders', type: 'uint256' }],
+        stateMutability: 'view',
+        type: 'function'
     },
     {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "type": "uint256"
-            }
+        inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+        name: 's_orders',
+        outputs: [
+            { internalType: 'uint16', name: 'fee', type: 'uint16' },
+            { internalType: 'uint8', name: 'orderType', type: 'uint8' },
+            { internalType: 'uint8', name: 'state', type: 'uint8' },
+            { internalType: 'bool', name: 'executed', type: 'bool' },
+            { internalType: 'address', name: 'maker', type: 'address' },
+            { internalType: 'address', name: 'tokenIn', type: 'address' },
+            { internalType: 'address', name: 'tokenOut', type: 'address' },
+            { internalType: 'uint256', name: 'amount', type: 'uint256' },
+            { internalType: 'uint256', name: 'targetPrice', type: 'uint256' },
+            { internalType: 'uint256', name: 'timestamp', type: 'uint256' },
+            { internalType: 'uint256', name: 'expiry', type: 'uint256' },
+            { internalType: 'bytes32', name: 'transactionHash', type: 'bytes32' }
         ],
-        "name": "s_orders",
-        "outputs": [
-            {
-                "internalType": "uint16",
-                "name": "fee",
-                "type": "uint16"
-            },
-            {
-                "internalType": "enum LimitOrder.OrderType",
-                "name": "orderType",
-                "type": "uint8"
-            },
-            {
-                "internalType": "enum LimitOrder.OrderState",
-                "name": "state",
-                "type": "uint8"
-            },
-            {
-                "internalType": "bool",
-                "name": "executed",
-                "type": "bool"
-            },
-            {
-                "internalType": "address",
-                "name": "maker",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "tokenIn",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "tokenOut",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "targetPrice",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "expiry",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "transactionHash",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function'
     },
     {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_orderID",
-                "type": "uint256"
-            }
-        ],
-        "name": "executeOrder",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        inputs: [{ internalType: 'uint256', name: '_orderID', type: 'uint256' }],
+        name: 'executeOrder',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function'
     }
 ];
 
 async function getPrice(feedRegistry, tokenIn) {
     try {
         const baseToken = tokenIn.toLowerCase() === WETH.toLowerCase() ? ETH : tokenIn;
-
         console.log(`Getting USD price for token ${tokenIn} (using ${baseToken} for feed)`);
         console.log(`Using Feed Registry at ${feedRegistry.address}`);
 
@@ -152,51 +85,29 @@ async function getPrice(feedRegistry, tokenIn) {
             throw new Error('Invalid price - less than or equal to 0');
         }
 
-        return {price: data.answer};
+        return { price: data.answer };
     } catch (error) {
         console.error('Price feed error:', error);
         throw error;
     }
 }
 
-async function getSigner(event, isLocal = false) {
-    if (isLocal) {
-        if (!process.env.TENDERLY_FORK_URL) {
-            throw new Error("TENDERLY_FORK_URL environment variable is not set");
-        }
-
-        console.log("Connecting to Tenderly fork:", process.env.TENDERLY_FORK_URL);
-
-        const provider = new ethers.providers.JsonRpcProvider(process.env.TENDERLY_FORK_URL);
-
-        try {
-            // Override network to match mainnet
-            provider.getNetwork = async () => ({
-                chainId: 1,
-                name: 'mainnet'
-            });
-            return provider.getSigner(RELAYER_ADDRESS);
-        } catch (error) {
-            console.error("Failed to set up Tenderly fork:", error);
-            throw error;
-        }
-    } else {
-        const client = new Defender(event);
-        const provider = client.relaySigner.getProvider();
-        return client.relaySigner.getSigner(provider, {
-            speed: 'fast',
-            validForSeconds: 300,
-            validUntilSeconds: Math.floor(Date.now() / 1000) + 300,
-            gasLimit: 300000
-        });
-    }
+async function getSigner(event) {
+    const client = new Defender(event);
+    const provider = client.relaySigner.getProvider();
+    return client.relaySigner.getSigner(provider, {
+        speed: 'fast',
+        validForSeconds: 300,
+        validUntilSeconds: Math.floor(Date.now() / 1000) + 300,
+        gasLimit: 3000000
+    });
 }
 
-async function main(event, isLocal = false) {
+async function handler(event) {
     console.log('Starting limit order check...');
 
     try {
-        const signer = await getSigner(event, isLocal);
+        const signer = await getSigner(event);
         const provider = signer.provider;
 
         const network = await provider.getNetwork();
@@ -237,22 +148,22 @@ async function main(event, isLocal = false) {
                     continue;
                 }
 
-                const {price} = await getPrice(feedRegistry, order.tokenIn);
+                const { price } = await getPrice(feedRegistry, order.tokenIn);
 
-                const shouldExecute = order.orderType.toString() === '0' ?
-                    price.lte(order.targetPrice) :
-                    price.gte(order.targetPrice);
+                const shouldExecute = order.orderType.toString() === '0'
+                    ? price.lte(order.targetPrice)
+                    : price.gte(order.targetPrice);
 
                 if (shouldExecute) {
                     console.log('Price conditions met, executing order...');
 
                     // Set gas price for the transaction
-                    const gasPrice = ethers.utils.parseUnits("20", "gwei");
+                    const gasPrice = ethers.utils.parseUnits('20', 'gwei');
                     console.log(`Using gas price: ${ethers.utils.formatUnits(gasPrice, 'gwei')} gwei`);
 
-                    // Submit transaction with only gasLimit and gasPrice
+                    // Submit transaction with specified gasLimit and gasPrice
                     const tx = await limitOrder.executeOrder(i, {
-                        gasLimit: 300000,
+                        gasLimit: 3000000,
                         gasPrice: gasPrice
                     });
 
@@ -261,7 +172,6 @@ async function main(event, isLocal = false) {
                     const receipt = await tx.wait();
 
                     if (receipt.status === 0) {
-                        // Try to get revert reason
                         try {
                             await provider.call(tx, tx.blockNumber);
                         } catch (error) {
@@ -283,8 +193,6 @@ async function main(event, isLocal = false) {
                 }
             } catch (error) {
                 console.error(`Failed to process order ${i}:`, error);
-
-                // Enhanced error reporting
                 if (error.receipt) {
                     try {
                         const tx = {
@@ -311,18 +219,4 @@ async function main(event, isLocal = false) {
 }
 
 // For Defender
-exports.handler = async function (event) {
-    return main(event, false);
-};
-
-// For local testing
-if (require.main === module) {
-    const path = require('path');
-    require('dotenv').config({path: path.resolve(__dirname, '../.env')});
-    main(null, true)
-        .then(() => process.exit(0))
-        .catch(error => {
-            console.error(error);
-            process.exit(1);
-        });
-}
+export {handler, getPrice}
