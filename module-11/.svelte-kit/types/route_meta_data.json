@@ -1,0 +1,12 @@
+{
+	"/": [],
+	"/api/price/[symbol]": [
+		"src/routes/api/price/[symbol]/+server.ts"
+	],
+	"/api/rpc": [
+		"src/routes/api/rpc/+server.ts"
+	],
+	"/api/transactions": [
+		"src/routes/api/transactions/+server.ts"
+	]
+}

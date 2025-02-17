@@ -1,0 +1,4 @@
+{
+  "require": ["tsx/cjs", "./test/hooks.ts"],
+  "timeout": 40000
+}
