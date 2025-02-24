@@ -580,3 +580,57 @@ sequenceDiagram
     TheGraph-->>Frontend: Return data
 ```
 This module deepens the practical skills in building secure, automated DeFi applications using the latest tools and technologies.
+
+# Module 15: Advanced Testing in Solidity
+
+## Overview
+This module focused on advanced testing techniques in Solidity, exploring various testing tools and completing several DeFi security challenges. The main focus was on understanding and implementing security testing practices using modern tools while solving practical DeFi vulnerability scenarios.
+
+## Tools Explored
+- **Fuzzing**: Automated testing technique that generates random inputs to find edge cases and vulnerabilities
+- **Manticore**: Symbolic execution tool for smart contract analysis
+- **Echidna**: Property-based testing framework specifically designed for Ethereum smart contracts
+- **Foundry**: Modern smart contract development toolchain with advanced testing capabilities
+
+## Damn Vulnerable DeFi Challenges
+
+### 1. Naive Receiver
+**Challenge Overview**: This challenge demonstrates the importance of access control and validation in flash loan receivers.
+
+**Solution Approach**:
+- Identified vulnerability in the flash loan receiver's lack of access control
+- Exploited the receiver's naïve fee payment mechanism
+- Implemented solution using proper validation checks
+
+### 2. Unstoppable
+**Challenge Overview**: Explores vulnerabilities in DeFi lending pool implementations.
+
+**Solution Approach**:
+- Analyzed the pool's accounting system
+- Identified critical vulnerability in token balance tracking
+- Demonstrated how to break the pool's invariant
+
+### 3. Side Entrance
+**Challenge Overview**: Demonstrates how flash loan callbacks can be exploited.
+
+**Solution Approach**:
+- Utilized flash loan callback mechanism
+- Created malicious contract to drain the lending pool
+- Implemented proper flash loan pattern with security considerations
+
+### 4. The Rewarder
+**Challenge Overview**: Shows vulnerabilities in reward distribution systems.
+
+**Solution Approach**:
+- Analyzed the reward distribution mechanism
+- Identified time-based vulnerability
+- Implemented flash loan attack to manipulate rewards
+
+## Key Learnings
+- Importance of comprehensive testing in DeFi protocols
+- Understanding common DeFi vulnerabilities and attack vectors
+- Implementing secure coding practices
+- Using advanced testing tools effectively
+
+## Security Considerations
+The solutions implemented follow best practices while demonstrating security vulnerabilities. All exploits were conducted in a controlled testing environment for educational purposes only.
