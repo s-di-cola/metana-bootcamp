@@ -1,0 +1,6 @@
+{
+  "remappings": [
+    "solady/=../../lib/solady/src/",
+    "@openzeppelin/=../../lib/openzeppelin-contracts/"
+  ]
+}
