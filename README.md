@@ -634,3 +634,26 @@ This module focused on advanced testing techniques in Solidity, exploring variou
 
 ## Security Considerations
 The solutions implemented follow best practices while demonstrating security vulnerabilities. All exploits were conducted in a controlled testing environment for educational purposes only.
+
+### Module 17: DAO Governance
+
+This module implements a complete DAO governance system using OpenZeppelin's Governor contracts. The system enables token holders to propose, vote on, and execute changes to a treasury contract through a secure, decentralized governance process.
+
+#### Key Components:
+
+- **Governance Token (ERC20)**: Token that grants voting power through delegation
+- **Governor Contract**: Core governance mechanism implementing OpenZeppelin's extensions:
+  - `GovernorCountingSimple`: Basic voting mechanism with for/against/abstain options
+  - `GovernorVotes`: Links governance to the token for voting power
+  - `GovernorVotesQuorumFraction`: Requires 4% quorum for proposals to pass
+  - `GovernorTimelockControl`: Enforces time delay before execution
+- **Timelock Controller**: Provides a mandatory delay between proposal approval and execution
+- **Treasury**: Contract controlled by the governance system that can release funds
+
+#### Governance Process:
+
+1. **Proposal Creation**: Token holders can propose actions to be taken by the DAO
+2. **Voting Phase**: After a 7200 block delay (~1 day), voting opens for 50400 blocks (~1 week)
+3. **Execution**: Successful proposals are queued in the timelock and can be executed after the timelock period
+
+The implementation includes comprehensive tests covering the full proposal lifecycle, from creation to execution, with proper handling of voting delays and block mining for accurate state transitions.
